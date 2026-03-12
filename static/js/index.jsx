@@ -14,5 +14,7 @@ import 'datatables.net';
 import 'datatables.net-jqui';
 import "datatables.net-jqui/css/dataTables.jqueryui.css";
 
+import '../css/index.css';
+
 // Import our applications.js file
-import '../../applications/js/applications.js';
+import '@applications_static/js/applications.js';

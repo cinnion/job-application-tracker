@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'applications',
     'applications_api',
+    'webpack_loader',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -140,8 +141,17 @@ STATIC_URL = 'static/'
 STATIC_ROOT = "staticfiles/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    os.path.join(BASE_DIR, "static"),
 ]
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-stats.json'),
+    },
+    'APPLICATION_DETAILS': {
+        'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-application-details-stats.json'),
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

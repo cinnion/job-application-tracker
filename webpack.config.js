@@ -1,14 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
+const BundleTracker = require('webpack-bundle-tracker');
 
 const config = {
     entry: {
-        bundle: [path.resolve(__dirname, 'unemployment', 'js/index.jsx')],
-        application_details: [path.resolve(__dirname, 'applications', 'js/details.jsx')]
+        bundle: [path.resolve(__dirname, 'static/js/index.jsx')],
+        application_details: [path.resolve(__dirname, 'applications', 'static/applications/js/details.jsx')]
     },
     output: {
-        path: path.resolve(__dirname, 'static'),
-        filename: '[name].js',
+        path: path.resolve(__dirname, 'static/webpack_bundles'),
+        filename: '[name]-[fullhash].js',
     },
     module: {
         rules: [
@@ -22,9 +23,13 @@ const config = {
         ]
     },
     resolve: {
+        alias: {
+            '@applications_static': path.resolve(__dirname, 'applications/static/applications'),
+        },
         extensions: ['.js', '.jsx', '.css']
     },
     plugins: [
+        new BundleTracker({filename: 'webpack-stats.json'}),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
