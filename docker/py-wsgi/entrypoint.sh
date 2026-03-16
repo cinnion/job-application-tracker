@@ -16,6 +16,6 @@ python manage.py migrate
 
 # Update static files
 rm -rf staticfiles/*
-python manage.py collectstatic --noinput
+python manage.py collectstatic --no-input --ignore=css/* --ignore=js/* --ignore=applications/css/* --ignore=applications/js/*
 
 exec "$@"

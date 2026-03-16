@@ -4,10 +4,11 @@ services:
       context: .
       dockerfile: ./docker/py-wsgi/Dockerfile.prod
       tags:
-        - ${REGISTRY}/unemployment-py-wsgi:${TAG}
-        - ${REGISTRY}/unemployment-py-wsgi:latest
+        - unemployment-py-wsgi:latest
       target: production
-    image: ${REGISTRY}/unemployment-py-wsgi
+    image: unemployment-py-wsgi
+    env_file:
+      - ./.env
     command: gunicorn unemployment.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/var/www/unemployment/web/staticfiles
@@ -16,15 +17,6 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints:
-          - node.hostname == ${DOCKER_NODE}
-    secrets:
-      - source: unemployment_env
-        target: /var/www/unemployment/web/.env
-        mode: 0400
-        uid: '0'
-        gid: '0'
 
 
   web:
@@ -32,9 +24,8 @@ services:
       context: ./docker/web
       dockerfile: Dockerfile
       tags:
-        - ${REGISTRY}/unemployment-web:${TAG}
-        - ${REGISTRY}/unemployment-web:latest
-    image: ${REGISTRY}/unemployment-web
+        - unemployment-web:latest
+    image: unemployment-web
     volumes:
       - static_volume:/var/www/unemployment/web/staticfiles
       - media_volume:/var/www/unemployment/web/mediafiles
@@ -46,16 +37,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints:
-          - node.hostname == ${DOCKER_NODE}
 
 
 volumes:
   static_volume:
   media_volume:
-
-
-secrets:
-  unemployment_env:
-    external: true

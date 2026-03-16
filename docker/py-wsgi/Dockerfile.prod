@@ -39,7 +39,7 @@ RUN npm run build
 #########
 
 # pull official base image
-FROM python:3.11-alpine
+FROM python:3.11-alpine as production
 
 # Create the directory for the app user
 RUN mkdir -p /var/www/unemployment
@@ -47,7 +47,7 @@ RUN mkdir -p /var/www/unemployment
 # Create the app user
 RUN addgroup -S app && adduser -S app -G app
 
-# Create the appropiate directories
+# Create the appropriate directories
 ENV HOME=/var/www/unemployment
 ENV APP_HOME=/var/www/unemployment/web
 RUN mkdir $APP_HOME
