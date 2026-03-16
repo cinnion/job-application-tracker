@@ -138,8 +138,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Where collectstatic puts files for use in production.
 STATIC_ROOT = "staticfiles/"
 
+# Where to search for static files which are not under an installed application.
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]

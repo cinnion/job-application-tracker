@@ -48,3 +48,8 @@
     text-decoration:    none;
     color:              black;
 }
+
+body.home {
+    background:         black;
+    color:              white;
+}

@@ -6,14 +6,14 @@
     <title>{% block title %}{% endblock %}</title>
 
     {% block additional_css %}{% endblock %}
-    {% render_bundle 'bundle' %}
 
+    {% render_bundle 'bundle' %}
     {% block additional_scripts %}{% endblock %}
     <script type="text/javascript">
         {% block js %}{% endblock %}
     </script>
 </head>
-<body>
+<body class="{% block extra_body_classes %}{% endblock %}">
     <nav class="navbar">
         <ul class="nav-left">
             <li><a href="{% url "homepage" %}">Home</a></li>

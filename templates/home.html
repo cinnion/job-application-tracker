@@ -1,0 +1,55 @@
+{% extends "master.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+
+{% block title %}
+    Job Application Tracking App
+{% endblock %}
+
+{% block additional_css %}
+    <style>
+        .follow-me {
+            display: flex;
+            justify-content: center;
+            max-height: 250px;
+            width: auto;
+            padding: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block extra_body_classes %}home{% endblock %}
+
+{% block additional_scripts %}
+    {% render_bundle 'application_details' %}
+{% endblock %}
+
+{% block content %}
+    <div class="follow-me">
+        <video preload="auto" loop autoplay muted id="video">
+            <source src="{% static 'images/aviacion-ejercito.webm' %}" type="video/webm">
+
+            <!-- Fallback content for browsers which do not support the video tag.  Are there any these days? -->
+            I'm sorry, but your browser appears to not support the video tag.
+        </video>
+    </div>
+
+    <div>
+        <p>
+            Welcome to my job application tracking application demo. It is a rather plain application at the moment, as
+            it was originally a very quick and very dirty creation intended solely for personal use to replace a Google
+            spreadsheet which had grown to be tedious to use. I had not even thought of using it as a sample of my work
+            at the time, or even if I wanted to have more than something which contained more than the spreadsheet, but
+            allowed for filtering.
+        </p>
+        <p>
+            Please follow the "Job Applications" link above to see the real part of this application, and please feel to
+            add or edit entries to try things out.
+        </p>
+    </div>
+
+    <div class="alert alert-info" role="alert">
+        Please note that the database for this application is reset every two hours.
+    </div>
+
+{% endblock %}
