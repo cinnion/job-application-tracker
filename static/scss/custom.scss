@@ -2,40 +2,40 @@
 @import "../../node_modules/bootstrap/scss/functions";
 
 // Default variable overrides go here.
-$font-family-serif:           "Times New Roman", Times, Georgia, Cambria, Palatino, Garamond, "Bookman Old Style";
+$font-family-serif:             "Times New Roman", Times, Georgia, Cambria, Palatino, Garamond, "Bookman Old Style";
 
-$font-family-base:            var(--#{prefix}font-serrif) !default;
+$font-family-base:              var(--#{prefix}font-serrif) !default;
 
-$navbar-padding-x:            10px !default;
+$navbar-padding-x:              10px !default;
 
 // Add our custom breakpoints to add 3xl and 4xl.
 $grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px,
-  3xl: 1600px,
-  4xl: 1920px,
+    xs:     0,
+    sm:     576px,
+    md:     768px,
+    lg:     992px,
+    xl:     1200px,
+    xxl:    1400px,
+    3xl:    1600px,
+    4xl:    1920px,
 ) !default;
 
 // Add our custom container maximum widths for 3xl and 4xl.
 $container-max-widths: (
-  sm: 540px,        // 45px per
-  md: 720px,        // 60px per
-  lg: 960px,        // 80px per
-  xl: 1140px,       // 95px per
-  xxl: 1320px,      // 111px per
-  3xl: 1512px,      // 126px per
-  4xl: 1812px,      // 151px per
+    sm: 540px,          // 45px per grid column
+    md: 720px,          // 60px per grid column
+    lg: 960px,          // 80px per grid column
+    xl: 1140px,         // 95px per grid column
+    xxl: 1320px,        // 111px per grid column
+    3xl: 1512px,        // 126px per grid column
+    4xl: 1812px,        // 151px per grid column
 ) !default;
 
-// Add a color to match the blue of the DataTable header.
-$dtblue:            #d7ebf9;
+// Add a color to match the blue of the DataTable header styled for Cupertino.
+$dtblue:                        #d7ebf9;                        // Clickable: default state - Background Color
 
 $custom-colors: (
-  'dtblue':         $dtblue
+    'dtblue':                   $dtblue
 );
 
 // Include the remainder of the required Bootstrap stylesheets (including any separate color mode stylesheets)
@@ -51,19 +51,23 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 @import "../../node_modules/bootstrap/scss/root";
 
 // Include any other optional stylesheet partials as desired; list below is not inclusive of all available stylesheets
-@import "../../node_modules/bootstrap/scss/forms";            // Needed for /applications/{new-application|edit}
-@import "../../node_modules/bootstrap/scss/nav";              // Needed for the nav items.
-@import "../../node_modules/bootstrap/scss/navbar";           // Needed for the actual navbar.
-@import "../../node_modules/bootstrap/scss/tables";           // Needed for the datatable to get the borders.
-@import "../../node_modules/bootstrap/scss/reboot";           // Needed for a consistent, cross-browser baseline for HTML elements.
-@import "../../node_modules/bootstrap/scss/type";             // Needed to customize the default typography styles.
-@import "../../node_modules/bootstrap/scss/containers";       // Needed for layout such as grid-breakpoints.
-@import "../../node_modules/bootstrap/scss/grid";             // Needed for our responsive grid.
-@import "../../node_modules/bootstrap/scss/helpers";          // Needed for our Sass variables, maps, mixins, etc.
-@import "../../node_modules/bootstrap/scss/images";           // Needed for image styles.
-@import "../../node_modules/bootstrap/scss/utilities";        // Needed for granular control.
+@import "../../node_modules/bootstrap/scss/forms";              // Needed for /applications/{new-application|edit}
+@import "../../node_modules/bootstrap/scss/nav";                // Needed for the nav items.
+@import "../../node_modules/bootstrap/scss/navbar";             // Needed for the actual navbar.
+@import "../../node_modules/bootstrap/scss/dropdown";           // Needed for dropdown menu support.
+@import "../../node_modules/bootstrap/scss/tables";             // Needed for the datatable to get the borders.
+@import "../../node_modules/bootstrap/scss/reboot";             // Needed for a consistent, cross-browser baseline for HTML elements.
+@import "../../node_modules/bootstrap/scss/type";               // Needed to customize the default typography styles.
+@import "../../node_modules/bootstrap/scss/containers";         // Needed for layout such as grid-breakpoints.
+@import "../../node_modules/bootstrap/scss/grid";               // Needed for our responsive grid.
+@import "../../node_modules/bootstrap/scss/helpers";            // Needed for our Sass variables, maps, mixins, etc.
+@import "../../node_modules/bootstrap/scss/images";             // Needed for image styles.
+@import "../../node_modules/bootstrap/scss/utilities";          // Needed for granular control.
 
 // Include the utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "../../node_modules/bootstrap/scss/utilities/api";
 
 // Add additional custom code here
+@import "./logout";                                             // Logout form styling.
+@import "./navbar";                                             // Styling the navbar.
+@import "./pages";                                              // Styling applied to individual pages as a whole.

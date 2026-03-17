@@ -8,6 +8,9 @@ import 'jquery-ui/ui/widgets/datepicker';
 // Import our modified Bootstrap styling in place of bootstrap.min.css.
 import "../scss/custom.scss";
 
+// Import the Bootstrap JavaScript plugins.
+import "bootstrap/js/dist/dropdown.js";
+
 // Import Cupertino theme CSS
 import "jquery-ui/dist/themes/cupertino/jquery-ui.css";
 import "jquery-ui/dist/themes/cupertino/theme.css";
@@ -17,8 +20,8 @@ import 'datatables.net';
 import 'datatables.net-jqui';
 import "datatables.net-jqui/css/dataTables.jqueryui.css";
 
-import '../css/index.css';
-
 // Import our applications.js file
 import '@applications_static/js/applications.js';
 import '@applications_static/css/applications.css';
+
+import "./logout";

@@ -1,0 +1,23 @@
+.navbar li.nav-item a.nav-link {
+    display:            inline;
+}
+
+.navbar li::after {
+    content:            "|";
+    display:            inline-block;
+    color:              var(--bs-black);
+    margin:             0 auto;
+    padding:            0 5px;
+}
+
+.navbar a.nav-link {
+    line-height:        1;
+}
+
+.navbar li:last-child::after {
+    content:            none;
+}
+
+.navbar .nav-item.dropdown li:after {
+    content:            none;
+}
