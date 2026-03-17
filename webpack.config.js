@@ -5,7 +5,7 @@ const BundleTracker = require('webpack-bundle-tracker');
 const config = {
     entry: {
         bundle: [path.resolve(__dirname, 'static/js/index.jsx')],
-        application_details: [path.resolve(__dirname, 'applications', 'static/applications/js/details.jsx')]
+//        application_details: [path.resolve(__dirname, 'applications', 'static/applications/js/details.jsx')]
     },
     output: {
         path: path.resolve(__dirname, 'static/webpack_bundles'),
@@ -39,5 +39,3 @@ const config = {
 };
 
 module.exports = config;
-
-    

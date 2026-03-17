@@ -5,6 +5,8 @@ window.jQuery = $;
 // Import jQuery UI components
 import 'jquery-ui/ui/widgets/datepicker';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 // Import Cupertino theme CSS
 import "jquery-ui/dist/themes/cupertino/jquery-ui.css";
 import "jquery-ui/dist/themes/cupertino/theme.css";
@@ -18,3 +20,4 @@ import '../css/index.css';
 
 // Import our applications.js file
 import '@applications_static/js/applications.js';
+import '@applications_static/css/applications.css';
