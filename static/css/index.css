@@ -11,28 +11,6 @@
     text-decoration:    underline;
 }
 
-.navbar {
-    display:            flex;
-    justify-content:    space-between;
-    align-items:        center;
-    list-style:         none;
-    padding:            0;
-    margin:             0;
-    background-color:   #f2f2f2;
-}
-
-.nav-left, .nav-right {
-    display:            flex;
-    list-style:         none;
-    padding:            0;
-    margin:             0;
-}
-
-.nav-left li, .nav-right li {
-    padding:            0;
-    position:           relative;
-}
-
 .navbar li::after {
     content:            "|";
     display:            inline-block;
@@ -42,11 +20,6 @@
 
 .navbar li:last-child::after {
     content:            none;
-}
-
-.nav-left a, .nav-right a {
-    text-decoration:    none;
-    color:              black;
 }
 
 body.home {

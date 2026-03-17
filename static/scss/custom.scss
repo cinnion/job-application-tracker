@@ -6,6 +6,8 @@ $font-family-serif:           "Times New Roman", Times, Georgia, Cambria, Palati
 
 $font-family-base:            var(--#{prefix}font-serrif) !default;
 
+$navbar-padding-x:            10px !default;
+
 // Add our custom breakpoints to add 3xl and 4xl.
 $grid-breakpoints: (
   xs: 0,
@@ -29,9 +31,19 @@ $container-max-widths: (
   4xl: 1812px,      // 151px per
 ) !default;
 
+// Add a color to match the blue of the DataTable header.
+$dtblue:            #d7ebf9;
+
+$custom-colors: (
+  'dtblue':         $dtblue
+);
+
 // Include the remainder of the required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/variables-dark";
+
+// Add our custom colors to the $theme-colors map.
+$theme-colors: map-merge($theme-colors, $custom-colors);
 
 // Include the remainder of the required parts of Bootstrap.
 @import "../../node_modules/bootstrap/scss/maps";
