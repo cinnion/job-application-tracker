@@ -1,5 +1,7 @@
+'use strict';
 const webpack = require('webpack');
 const path = require('path');
+const autoprefixer = require('autoprefixer');
 const BundleTracker = require('webpack-bundle-tracker');
 
 const config = {
@@ -18,6 +20,22 @@ const config = {
                 use: [
                     'style-loader',
                     'css-loader'
+                ]
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            postcssOptions: {
+                                plugins: [ autoprefixer ]
+                            }
+                        }
+                    },
+                    { loader: 'sass-loader' },
                 ]
             }
         ]
