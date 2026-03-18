@@ -2,6 +2,7 @@ asgiref==3.8.1
 cachetools==5.5.0
 certifi==2024.8.30
 charset-normalizer==3.4.0
+coverage==7.13.5
 crispy-bootstrap5==2024.10
 decopatch==1.4.10
 Django==5.1.3
