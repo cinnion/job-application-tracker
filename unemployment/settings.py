@@ -125,6 +125,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Email backend
+# https://docs.djangoproject.com/en/6.0/topics/email/
+DEFAULT_FROM_EMAIL = "admin@ka8zrt.com"
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = "/tmp/unemployment-messages"
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -138,7 +144,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 
 STATIC_URL = 'static/'
 
