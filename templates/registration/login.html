@@ -43,5 +43,10 @@
             {% endfor %}
             <button type="submit">Log In</button>
         </form>
+        <div class="mt-5">
+            <p>
+                Forgot your login? <a href="{% url "password_reset" %}">Click here</a>
+            </p>
+        </div>
     </div>
 {% endblock %}
