@@ -11,29 +11,34 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import environ
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+env = environ.Env(DEBUG=(bool, False))
 
-SITE_NAME = os.getenv('SITE_NAME')
+# Set our DEBUG value
+DEBUG = env.bool('DEBUG', False)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Get our site name.
+SITE_NAME = env('SITE_NAME')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-GOOGLE_SPREADSHEET_ID = os.getenv('GOOGLE_SPREADSHEET_ID')
+# Google API key
+GOOGLE_API_KEY = env('GOOGLE_API_KEY')
+GOOGLE_SPREADSHEET_ID = env('GOOGLE_SPREADSHEET_ID')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = [os.getenv('MYHOSTNAME')]
+ALLOWED_HOSTS = env.list('MYHOSTNAME')
 
 # Application definition
 
@@ -94,17 +99,7 @@ WSGI_APPLICATION = 'unemployment.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DATABASE_ENGINE'),
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
-        #        'OPTIONS': {
-        #            'sslmode': 'require',  # Enforce SSL connections
-        #        }
-    }
+    'default': env.db()
 }
 
 # Password validation
@@ -127,20 +122,43 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Email backend
 # https://docs.djangoproject.com/en/6.0/topics/email/
-DEFAULT_FROM_EMAIL = "admin@ka8zrt.com"
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = "/tmp/unemployment-messages"
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+SERVER_EMAIL = env('SERVER_EMAIL')
+
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+split_list = EMAIL_BACKEND.split('.')
+if split_list[-2] == 'filebased':
+    EMAIL_FILE_PATH = env('EMAIL_FILE_PATH')
+elif split_list[-2] == 'smtp':
+    EMAIL_HOST = env('EMAIL_HOST')
+    EMAIL_PORT = env('EMAIL_PORT', 25)
+    EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD', '')
+    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
+    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', False)
+    EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT', None)
+    EMAIL_SSL_KEYFILE = env.path('EMAIL_SSL_KEYFILE', None)
+    EMAIL_SSL_CERTFILE = env.path('EMAIL_SSL_CERTFILE', None)
+elif split_list[-2] == 'console':
+    pass
+elif split_list[-2] == 'locmem':
+    pass
+elif split_list[-2] == 'dummy':
+    pass
+else:
+    raise environ.ImproperlyConfigured('Unknown mail backend: {}'.format(split_list[-2]))
+del split_list
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = env.str('LANGUAGE_CODE', 'en-us')
 
-TIME_ZONE = 'America/New_York'
+TIME_ZONE = env.str('TIME_ZONE', 'America/New_York')
 
-USE_I18N = True
+USE_I18N = env.bool('USE_I18N', True)
 
-USE_TZ = True
+USE_TZ = env.bool('USE_TZ', True)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
