@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.11-alpine AS builder
+FROM python:3.12-alpine AS builder
 
 # Set the user
 USER root
@@ -39,7 +39,7 @@ RUN npm run build
 #########
 
 # pull official base image
-FROM python:3.11-alpine as production
+FROM python:3.12-alpine as production
 
 # Create the directory for the app user
 RUN mkdir -p /var/www/unemployment
