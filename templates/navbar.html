@@ -14,6 +14,7 @@
                         {% if user.is_staff %}
                             <li><a class="dropdown-item" href="{% url "admin:index" %}">Admin</a></li>
                         {% endif %}
+                        <li><a class="dropdown-item" href="{% url "admin:password_change" %}">Change password</a></li>
                         <li><a class="dropdown-item" href="#" onclick="window.submitLogoutForm(event);">Log out</a></li>
                     </ul>
                 </li>

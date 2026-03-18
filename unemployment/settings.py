@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'applications',
     'applications_api',
     'webpack_loader',
+    'widget_tweaks',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

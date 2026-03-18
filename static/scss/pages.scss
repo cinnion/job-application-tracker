@@ -3,6 +3,7 @@ body.home {
     color:              white;
 }
 
-body.login div.login-div {
+// Pages which deal with authentication, such as login, logout, password change, password reset.
+body.auth div.auth-div {
     max-width:          576px !important;
 }

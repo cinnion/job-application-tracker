@@ -51,6 +51,7 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 @import "../../node_modules/bootstrap/scss/root";
 
 // Include any other optional stylesheet partials as desired; list below is not inclusive of all available stylesheets
+@import "../../node_modules/bootstrap/scss/alert";              // Needed for alerts.
 @import "../../node_modules/bootstrap/scss/forms";              // Needed for /applications/{new-application|edit}
 @import "../../node_modules/bootstrap/scss/nav";                // Needed for the nav items.
 @import "../../node_modules/bootstrap/scss/navbar";             // Needed for the actual navbar.
