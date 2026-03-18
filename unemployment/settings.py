@@ -9,10 +9,11 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
 from pathlib import Path
 import environ
 import os
+
+from django.urls import reverse_lazy
 
 env = environ.Env(DEBUG=(bool, False))
 
@@ -40,6 +41,7 @@ GOOGLE_SPREADSHEET_ID = env('GOOGLE_SPREADSHEET_ID')
 
 ALLOWED_HOSTS = env.list('MYHOSTNAME')
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', False)
 
 # Application definition
 
@@ -188,6 +190,6 @@ WEBPACK_LOADER = {
 
 
 # Login/Logout related settings.
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = reverse_lazy('/')
+LOGOUT_REDIRECT_URL = reverse_lazy('/')
 LOGIN_URL = '/accounts/login/'
