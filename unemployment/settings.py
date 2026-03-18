@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+SITE_NAME = os.getenv('SITE_NAME')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -79,6 +81,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'unemployment.context_processors.build_info_processor',
+                'unemployment.context_processors.site_name_processor',
             ],
         },
     },
