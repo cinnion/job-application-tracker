@@ -137,8 +137,8 @@ elif split_list[-2] == 'smtp':
     EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
     EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', False)
     EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT', None)
-    EMAIL_SSL_KEYFILE = env.path('EMAIL_SSL_KEYFILE', None)
-    EMAIL_SSL_CERTFILE = env.path('EMAIL_SSL_CERTFILE', None)
+    EMAIL_SSL_KEYFILE = env.str('EMAIL_SSL_KEYFILE', None)
+    EMAIL_SSL_CERTFILE = env.str('EMAIL_SSL_CERTFILE', None)
 elif split_list[-2] == 'console':
     pass
 elif split_list[-2] == 'locmem':
