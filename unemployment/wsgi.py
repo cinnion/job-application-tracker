@@ -14,6 +14,6 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'unemployment.settings')
 
-pydevd_pycharm.settrace('wing-1.home.ka8zrt.com', port=6767, stdoutToServer=True, stderrToServer=True)
+pydevd_pycharm.settrace('wing-1.home.ka8zrt.com', port=6767, stdoutToServer=True, stderrToServer=True, suspend=False, trace_only_current_thread=True)
 
 application = get_wsgi_application()
