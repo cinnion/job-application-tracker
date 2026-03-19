@@ -42,7 +42,7 @@ pipeline {
                                                   .replaceAll(/\$\{DOCKER_NODE\}/, 'docker')
 
                     // Write the resolved content to a new file for interior production
-                    writeFile(file: 'unemployment-docker.yml', text: resolvedContentInternal)
+                    writeFile(file: 'unemployment-debug-docker.yml', text: resolvedContentInternal)
 
                     // Replace the variables for exterior production
                     def resolvedContentExternal = template.replaceAll(/\$\{REGISTRY\}/, env.REGISTRY)
@@ -50,7 +50,7 @@ pipeline {
                                                   .replaceAll(/\$\{DOCKER_NODE\}/, 'beta')
 
                     // Write the resolved content to a new file for exterior production
-                    writeFile(file: 'unemployment-beta.yml', text: resolvedContentExternal)
+                    writeFile(file: 'unemployment-debug-beta.yml', text: resolvedContentExternal)
                 }
             }
         }
@@ -63,10 +63,10 @@ pipeline {
 
         stage('Push') {
             steps {
-                sh "docker push ${REGISTRY}/unemployment-py-wsgi:${TAG}"
-                sh "docker push ${REGISTRY}/unemployment-py-wsgi:latest"
-                sh "docker push ${REGISTRY}/unemployment-web:${TAG}"
-                sh "docker push ${REGISTRY}/unemployment-web:latest"
+                sh "docker push ${REGISTRY}/unemployment-py-wsgi:${TAG}-debug"
+                sh "docker push ${REGISTRY}/unemployment-py-wsgi:latest-debug"
+                sh "docker push ${REGISTRY}/unemployment-web:${TAG}-debug"
+                sh "docker push ${REGISTRY}/unemployment-web:latest-debug"
             }
         }
 
@@ -74,11 +74,11 @@ pipeline {
             steps {
                 sshagent(credentials: ['jenkins-ssh']) {
                     sh '''
-                        scp -p unemployment-docker.yml root@docker:~/docker-compose/unemployment.yml
-                        ssh root@docker 'docker stack deploy --detach -c ~/docker-compose/unemployment.yml unemployment'
+                        scp -p unemployment-debug-docker.yml root@docker:~/docker-compose/unemployment-debug.yml
+                        ssh root@docker 'docker stack deploy --detach -c ~/docker-compose/unemployment-debug.yml unemployment-debug'
 
-                        scp -p unemployment-beta.yml root@beta:~/docker-compose/unemployment.yml
-                        ssh root@beta 'docker stack deploy --detach -c ~/docker-compose/unemployment.yml unemployment'
+                        scp -p unemployment-debug-beta.yml root@beta:~/docker-compose/unemployment-debug.yml
+                        ssh root@beta 'docker stack deploy --detach -c ~/docker-compose/unemployment-debug.yml unemployment-debug'
                     '''
                 }
             }
