@@ -8,7 +8,7 @@ services:
         - ${REGISTRY}/unemployment-py-wsgi:latest-debug
       target: production
     image: ${REGISTRY}/unemployment-py-wsgi:latest-debug
-    command: gunicorn --timeout 3600 unemployment.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn
     volumes:
       - static_volume:/var/www/unemployment/web/staticfiles
       - media_volume:/var/www/unemployment/web/mediafiles

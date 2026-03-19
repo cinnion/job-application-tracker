@@ -66,10 +66,12 @@ COPY --from=builder /usr/src/app/wheels /wheels
 COPY --from=builder /usr/src/app/requirements.txt .
 COPY --from=builder /usr/src/app/static static
 RUN pip install --no-cache /wheels/*
+RUN pip uninstall --yes coverage
 
 COPY ./docker/py-wsgi/entrypoint.sh .
 RUN chown root:root $APP_HOME/entrypoint.sh
 RUN chmod +x $APP_HOME/entrypoint.sh
+COPY ./docker/py-wsgi/gunicorn.config.py .
 
 # copy project
 COPY . .
