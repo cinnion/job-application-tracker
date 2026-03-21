@@ -197,6 +197,6 @@ WEBPACK_LOADER = {
 
 
 # Login/Logout related settings.
-LOGIN_REDIRECT_URL = reverse_lazy('/')
-LOGOUT_REDIRECT_URL = reverse_lazy('/')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
 LOGIN_URL = '/accounts/login/'
