@@ -26,8 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# Get our site name.
+# Get our site name and admins
 SITE_NAME = env('SITE_NAME')
+ADMINS = env.list('ADMINS', default=[])
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
