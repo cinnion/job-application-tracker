@@ -39,9 +39,13 @@ SECRET_KEY = env('SECRET_KEY')
 GOOGLE_API_KEY = env('GOOGLE_API_KEY')
 GOOGLE_SPREADSHEET_ID = env('GOOGLE_SPREADSHEET_ID')
 
-ALLOWED_HOSTS = env.list('MYHOSTNAME')
+ALLOWED_HOSTS = env.list('MYHOSTNAMES')
+
+# CSRF/SSL related settings
+CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', True)
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
-SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', False)
+SECURE_PROXY_SSL_HEADER = env.tuple('SECURE_PROXY_SSL_HEADER', default=('HTTP_X_FORWARDED_PROTO', 'https'))
+SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
 
 # Application definition
 
@@ -102,7 +106,7 @@ WSGI_APPLICATION = 'unemployment.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db()
+    'default': env.db_url()
 }
 
 # Password validation
