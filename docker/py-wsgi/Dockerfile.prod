@@ -60,6 +60,9 @@ RUN apk add --no-cache tzdata && \
     echo "America/New_York" > /etc/timezone
 ENV TZ=America/New_York
 
+# Install SSL certificates
+RUN apk add --no-cache ca-certificates
+
 # Install dependencies
 RUN apk update && apk add libpq
 COPY --from=builder /usr/src/app/wheels /wheels
