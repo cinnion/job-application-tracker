@@ -7,6 +7,21 @@ pipeline {
         DOCKER_NODE = "docker"
     }
     stages {
+        stage('Get Tag Name') {
+            steps {
+                script {
+                    def gitTag = sh(script: 'git tag --points-at HEAD', returnStdout: true).trim()
+
+                    if (gitTag) {
+                        env.GIT_TAG = gitTag
+                        echo "Found Git tag: ${env.GIT_TAG}"
+                    } else {
+                        env.GIT_TAG = "None"
+                        echo "No Git tag found on current commit. Defaulting to ${env.GIT_TAG}"
+                    }
+                }
+            }
+        }
         stage('Generate Build Info JSON') {
             steps {
                 script {
@@ -18,6 +33,7 @@ pipeline {
                         'BUILD_URL': env.BUILD_URL,
                         'GIT_COMMIT': env.GIT_COMMIT,
                         'GIT_BRANCH': env.GIT_BRANCH,
+                        'GIT_TAG': env.GIT_TAG,
                         'BUILD_DATE': env.BUILD_DATE_TIME,
                     ]
 
