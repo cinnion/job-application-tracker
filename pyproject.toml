@@ -41,7 +41,7 @@ dependencies = [
     "gunicorn==23.0.0",
 
     # Database
-    "psycopg==3.3.3",
+    "psycopg[binary,pool]==3.3.3",
 
     # Type hints for Python 3.8+
     "typing_extensions==4.12.2",
