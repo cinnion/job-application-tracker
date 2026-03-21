@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.12-alpine AS builder
+FROM python:3.13-alpine AS builder
 
 # Set the user
 USER root
@@ -15,19 +15,19 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
+# install psycopg dependencies
 RUN apk update \
     && apk add postgresql-dev gcc python3-dev
 
 # Lint
-RUN pip install --upgrade pip
-RUN pip install flake8
 COPY . .
+RUN pip install --upgrade pip
+RUN pip install -e .
+RUN pip install -e '.[dev]'
 RUN flake8
 
 # install dependencies
-COPY ./requirements.txt .
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -e .
 
 RUN apk add nodejs npm && npm install
 
@@ -39,7 +39,7 @@ RUN npm run build
 #########
 
 # pull official base image
-FROM python:3.12-alpine as production
+FROM python:3.13-alpine as production
 
 # Create the directory for the app user
 RUN mkdir -p /var/www/unemployment
@@ -63,7 +63,6 @@ ENV TZ=America/New_York
 # Install dependencies
 RUN apk update && apk add libpq
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
 COPY --from=builder /usr/src/app/static static
 RUN pip install --no-cache /wheels/*
 

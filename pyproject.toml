@@ -1,0 +1,133 @@
+[project]
+name = "job_application_tracker"
+version = "1.1"
+description = "A tracking system for job applications"
+readme = "README.md"
+requires-python = ">=3.12"
+license-files = ["LICENSE"]
+authors = [
+    {name = "Douglas Needham", email = "cinnion@gmail.com" },
+]
+dependencies = [
+    # Django
+    "Django==6.0.3",
+
+    # Advanced .env support
+    "django-environ==0.13.0",
+
+    # Webpack
+    "django-webpack-loader==3.2.3",
+
+    # Crispy Forms
+    "crispy-bootstrap5==2024.10",
+    "django-crispy-forms==2.3",
+
+    # For DataTable support
+    "django-ajax-datatable==4.5.0",
+    "djangorestframework==3.15.2",
+
+    # For tweaking form widgets
+    "django-widget-tweaks==1.5.1",
+
+    # Google sheet access
+    "google-api-python-client==2.153.0",
+    "google-auth-oauthlib==1.2.1",
+    "google-cloud-api-keys==0.5.13",
+
+    # Status proto mapping for gRPC
+    "grpcio-status==1.67.1",
+
+    # WSGI server
+    "gunicorn==23.0.0",
+
+    # Database
+    "psycopg==3.3.3",
+
+    # Type hints for Python 3.8+
+    "typing_extensions==4.12.2",
+]
+
+[project.urls]
+Homepage = "https://www.ka8zrt.com"
+Documentation = "https://www.ka8zrt.com"
+
+[project.scripts]
+manage = "unemployment.manage:main"
+
+[project.optional-dependencies]
+dev = [
+    "Flake8-pyproject==1.2.4",                                  # TOML support for flake8
+    "coverage==7.13.5",                                         # Coverage tool
+    "django-upgrade==1.30.0",                                   # Upgrade tool
+    "flake8==7.3.0",                                            # Coding style
+    "pipdeptree==2.32.0",                                       # To see dependency tree
+
+    "pytest==8.3.4",
+    "pytest-cov==7.0.0",
+    "pytest-cases==3.8.6",
+    "pytest-django==4.12.0",
+]
+remotedebug = [
+    "pydevd-pycharm==251.26094.141"
+]
+
+[tool.pytest.ini_options]
+django_settings_module = "unemployment.settings"                # Our Django project settings
+addopts = [
+    "--cov-report=term-missing",                                # Show missing lines in terminal output
+    "--cov-report=html=htmlcov",                                # Generage an HTML report in the htmlcov directory
+    "--cov-fail-under=40",                                      # Fail the test run if coverage is below 40%
+]
+
+[tool.coverage.run]
+branch = true
+source = [ "." ]
+dynamic_context = "test_function"
+omit = [
+    # Virtual environment and build artifacts
+    ".venv/*",
+    "htmlcov/",
+    "*/node_modules/*",
+    "docker/",
+
+    # Django specific exclusions
+    "*/migrations/*",
+    "*/static/*",
+    "*/templates/*",
+    "*/__init__.py",
+    "manage.py",
+
+    # Test files themselves
+    "*/tests/*",
+    "tests.py",
+]
+
+[tool.coverage.report]
+skip_empty = true               # Don't report on empty files (those that have no statements)
+fail_under = 40                 # Fail the build if the total coverage is below this minimum percentage
+show_missing = true             # Show missing lines
+
+[tool.coverage.html]
+directory = "htmlcov"           # Directory to write the HTML report files to
+show_contexts = true            # Show the context for each covered line in the HTML report
+title = "Job Application Tracker Test Coverage Report"          # Title for the HTML report
+
+[tool.flake8]
+max-line-length = 120
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "node_modules"
+]
+extend-ignore = [
+    "E501",                     # Line too long
+    "F401"                      # Unused imports
+]
+
+[tool.setuptools]
+py-modules = [
+    "applications",
+    "applications_ini",
+    "unemployment",
+]
