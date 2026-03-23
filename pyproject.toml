@@ -18,6 +18,9 @@ dependencies = [
     # Webpack
     "django-webpack-loader==3.2.3",
 
+    # Password validators
+    "django-password-validators==1.7.3",
+
     # Crispy Forms
     "crispy-bootstrap5==2024.10",
     "django-crispy-forms==2.3",
