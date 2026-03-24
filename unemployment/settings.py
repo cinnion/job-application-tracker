@@ -8,6 +8,9 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
+
+Default values come from django.conf.global_settings.py, and this file has been reordered to match that file, with
+settings for extensions added at the end of the file.
 """
 from pathlib import Path
 import environ
@@ -15,43 +18,85 @@ import os
 
 from django.urls import reverse_lazy
 
-env = environ.Env(DEBUG=(bool, False))
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# Set our DEBUG value
-DEBUG = env.bool('DEBUG', False)
+# Initialize the env object.
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Take environment variables from .env file
+# Take environment variables from the .env file.
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# Get our site name and admins
-SITE_NAME = env('SITE_NAME')
+# Set our DEBUG value
+DEBUG = env.bool('DEBUG', False)
+
+# People who get code error notifications.
 ADMINS = env.list('ADMINS', default=[])
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-
-# Google API key
-GOOGLE_API_KEY = env('GOOGLE_API_KEY')
-GOOGLE_SPREADSHEET_ID = env('GOOGLE_SPREADSHEET_ID')
-
+# Hostts/domain names that are valid for this site.
 ALLOWED_HOSTS = env.list('MYHOSTNAMES')
 
-# CSRF/SSL related settings
-CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', True)
-CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
-SECURE_PROXY_SSL_HEADER = env.tuple('SECURE_PROXY_SSL_HEADER', default=('HTTP_X_FORWARDED_PROTO', 'https'))
-SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
-USE_X_FORWARDED_HOST = env.bool('USE_X_FORWARDED_HOST', True)
-USE_X_FORWARDED_PORT = env.bool('USE_X_FORWARDED_PORT', True)
+# Local time zone for this installation.
+TIME_ZONE = env.str('TIME_ZONE', 'America/New_York')
 
-# Application definition
+# If you set this to True, Django will use timezone-aware datetimes.
+USE_TZ = env.bool('USE_TZ', True)
 
+# Internationalization
+# https://docs.djangoproject.com/en/6.0/topics/i18n/
+
+# Language code for this installation. Valid choices can be found here:
+# https://www.iana.org/assignments/language-subtag-registry/
+# If LANGUAGE_CODE is not listed in LANGUAGES (below), the project must
+# provide the necessary translations and locale definitions.
+LANGUAGE_CODE = env.str('LANGUAGE_CODE', 'en-us')
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
+USE_I18N = env.bool('USE_I18N', True)
+
+# Email address that error messages come from.
+SERVER_EMAIL = env('SERVER_EMAIL')
+
+# Database
+# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+DATABASES = {
+    'default': env.db_url()
+}
+
+# Email backend
+# https://docs.djangoproject.com/en/6.0/topics/email/
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+split_list = EMAIL_BACKEND.split('.')
+if split_list[-2] == 'filebased':
+    EMAIL_FILE_PATH = env('EMAIL_FILE_PATH')
+elif split_list[-2] == 'smtp':
+    # Host for sending email.
+    EMAIL_HOST = env('EMAIL_HOST')
+    # Port for sending email.
+    EMAIL_PORT = env.int('EMAIL_PORT', 25)
+    # Optional SMTP authentication information for EMAIL_HOST.
+    EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD', '')
+    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
+    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', False)
+    EMAIL_SSL_KEYFILE = env.str('EMAIL_SSL_KEYFILE', None)
+    EMAIL_SSL_CERTFILE = env.str('EMAIL_SSL_CERTFILE', None)
+    EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT', None)
+elif split_list[-2] == 'console':
+    pass
+elif split_list[-2] == 'locmem':
+    pass
+elif split_list[-2] == 'dummy':
+    pass
+else:
+    raise environ.ImproperlyConfigured('Unknown mail backend: {}'.format(split_list[-2]))
+del split_list
+
+# List of strings representing installed apps.
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,22 +113,6 @@ INSTALLED_APPS = [
     'webpack_loader',
     'widget_tweaks',
 ]
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'unemployment.urls'
 
 TEMPLATES = [
     {
@@ -104,18 +133,79 @@ TEMPLATES = [
     },
 ]
 
+# Default email address to use for various automated correspondence from
+# the site managers.
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+# A secret key for this particular Django installation. Used in secret-key
+# hashing algorithms. Set this in your settings, or Django will complain
+# loudly.
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env('SECRET_KEY')
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/6.0/howto/static-files/
+
+# Absolute path to the directory static files should be collected to.
+# Example: "/var/www/example.com/static/"
+STATIC_ROOT = "staticfiles/"
+
+# URL that handles the static files served from STATIC_ROOT.
+# Example: "http://example.com/static/", "http://static.example.com/"
+STATIC_URL = 'static/'
+
+USE_X_FORWARDED_HOST = env.bool('USE_X_FORWARDED_HOST', True)
+USE_X_FORWARDED_PORT = env.bool('USE_X_FORWARDED_PORT', True)
+
+# The Python dotted path to the WSGI application that Django's internal server
+# (runserver) will use. If `None`, the return value of
+# 'django.core.wsgi.get_wsgi_application' is used, thus preserving the same
+# behavior as previous versions of Django. Otherwise this should point to an
+# actual WSGI application object.
 WSGI_APPLICATION = 'unemployment.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+# If your Django app is behind a proxy that sets a header to specify secure
+# connections, AND that proxy ensures that user-submitted headers with the
+# same name are ignored (so that people can't spoof it), set this value to
+# a tuple of (header_name, header_value). For any requests that come in with
+# that header/value, request.is_secure() will return True.
+# WARNING! Only set this if you fully understand what you're doing. Otherwise,
+# you may be opening yourself up to a security risk.
+SECURE_PROXY_SSL_HEADER = env.tuple('SECURE_PROXY_SSL_HEADER', default=('HTTP_X_FORWARDED_PROTO', 'https'))
 
-DATABASES = {
-    'default': env.db_url()
-}
+##############
+# MIDDLEWARE #
+##############
+
+# List of middleware to use. Order is important; in the request phase, these
+# middleware will be applied in the order given, and in the response
+# phase the middleware will be applied in reverse order.
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# Whether the session cookie should be secure (https:// only).
+SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
+
+##################
+# AUTHENTICATION #
+##################
+
+LOGIN_URL = '/accounts/login/'
+
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
+
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -142,59 +232,59 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Email backend
-# https://docs.djangoproject.com/en/6.0/topics/email/
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
-SERVER_EMAIL = env('SERVER_EMAIL')
+########
+# CSRF #
+########
 
-EMAIL_BACKEND = env('EMAIL_BACKEND')
-split_list = EMAIL_BACKEND.split('.')
-if split_list[-2] == 'filebased':
-    EMAIL_FILE_PATH = env('EMAIL_FILE_PATH')
-elif split_list[-2] == 'smtp':
-    EMAIL_HOST = env('EMAIL_HOST')
-    EMAIL_PORT = env.int('EMAIL_PORT', 25)
-    EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', '')
-    EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD', '')
-    EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', False)
-    EMAIL_USE_SSL = env.bool('EMAIL_USE_SSL', False)
-    EMAIL_TIMEOUT = env.int('EMAIL_TIMEOUT', None)
-    EMAIL_SSL_KEYFILE = env.str('EMAIL_SSL_KEYFILE', None)
-    EMAIL_SSL_CERTFILE = env.str('EMAIL_SSL_CERTFILE', None)
-elif split_list[-2] == 'console':
-    pass
-elif split_list[-2] == 'locmem':
-    pass
-elif split_list[-2] == 'dummy':
-    pass
-else:
-    raise environ.ImproperlyConfigured('Unknown mail backend: {}'.format(split_list[-2]))
-del split_list
+# Settings for CSRF cookie.
+CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', True)
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+###############
+# STATICFILES #
+###############
 
-LANGUAGE_CODE = env.str('LANGUAGE_CODE', 'en-us')
-
-TIME_ZONE = env.str('TIME_ZONE', 'America/New_York')
-
-USE_I18N = env.bool('USE_I18N', True)
-
-USE_TZ = env.bool('USE_TZ', True)
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Where collectstatic puts files for use in production.
-STATIC_ROOT = "staticfiles/"
-
-# Where to search for static files which are not under an installed application.
+# A list of locations of additional static files
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+# The location for the root of our URLs.
+ROOT_URLCONF = 'unemployment.urls'
+
+####################################################
+# Custom settings and application related settings #
+####################################################
+
+# Get our site name and admins
+SITE_NAME = env('SITE_NAME')
+
+################
+# applications #
+################
+
+# Google API key for use by applications.importsheet
+GOOGLE_API_KEY = env('GOOGLE_API_KEY')
+GOOGLE_SPREADSHEET_ID = env('GOOGLE_SPREADSHEET_ID')
+
+####################
+# applications_api #
+####################
+
+####################################
+# crispy_forms / crispy_bootstrap5 #
+####################################
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+##################
+# rest_framework #
+##################
+
+##################
+# webpack_loader #
+##################
 WEBPACK_LOADER = {
     'DEFAULT': {
         'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-stats.json'),
@@ -203,12 +293,3 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-application-details-stats.json'),
     },
 }
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-
-# Login/Logout related settings.
-LOGIN_REDIRECT_URL = reverse_lazy('home')
-LOGOUT_REDIRECT_URL = reverse_lazy('home')
-LOGIN_URL = '/accounts/login/'
