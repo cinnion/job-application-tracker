@@ -1,3 +1,3 @@
 #!/bin/bash
-xterm -T 'manage.py runserver' -e 'python manage.py runserver 0.0.0.0:8000' &
-xterm -T 'webpack' -e 'npx webpack --watch' &
+xterm -bg black -fg green -T 'manage.py runserver' -e 'python manage.py runserver 0.0.0.0:8000' &
+xterm -bg black -fg green -T 'webpack' -e 'npx webpack --watch' &
