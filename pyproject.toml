@@ -125,7 +125,6 @@ exclude = [
 ]
 extend-ignore = [
     "E501",                     # Line too long
-    "F401"                      # Unused imports
 ]
 
 [tool.setuptools]
