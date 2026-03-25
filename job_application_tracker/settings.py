@@ -262,6 +262,26 @@ ROOT_URLCONF = 'job_application_tracker.urls'
 # Get our site name and admins
 SITE_NAME = env('SITE_NAME')
 
+# Get our environment ("development", "testing", "production")
+DJANGO_ENV = env('DJANGO_ENV', default='production')
+
+# Do our development overrides
+if DJANGO_ENV == 'development':
+    INSTALLED_APPS += [
+        "django_extensions",
+        "debug_toolbar",
+    ]
+
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        *MIDDLEWARE
+    ]
+
+    INTERNAL_IPS = [
+        "127.0.0.1",
+        "192.168.8.194",
+    ]
+
 ################
 # applications #
 ################

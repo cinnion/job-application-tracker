@@ -61,6 +61,8 @@ manage = "job_application_tracker.manage:main"
 dev = [
     "Flake8-pyproject==1.2.4",                                  # TOML support for flake8
     "coverage==7.13.5",                                         # Coverage tool
+    "django-debug-toolbar==6.2.0",                              # Django Debug Toolbar
+    "django-extensions==4.1",                                   # Django extensions
     "django-upgrade==1.30.0",                                   # Upgrade tool
     "flake8==7.3.0",                                            # Coding style
     "pipdeptree==2.32.0",                                       # To see dependency tree
