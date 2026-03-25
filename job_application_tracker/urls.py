@@ -19,10 +19,10 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path("", views.home, name="home"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("about", views.about, name="about"),
     path('applications/', include('applications.urls', namespace='applications')),
     path('api/jobapplications/', include('applications_api.urls')),
+    path('admin/', admin.site.urls),
 ]
