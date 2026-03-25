@@ -98,6 +98,7 @@ del split_list
 
 # List of strings representing installed apps.
 INSTALLED_APPS = [
+    'users'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
