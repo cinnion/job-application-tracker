@@ -98,7 +98,9 @@ del split_list
 
 # List of strings representing installed apps.
 INSTALLED_APPS = [
-    'users'
+    'users',
+    'applications',
+    'applications_api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -109,8 +111,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_password_validators',
     'rest_framework',
-    'applications',
-    'applications_api',
     'webpack_loader',
     'widget_tweaks',
 ]
@@ -197,6 +197,8 @@ SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
 ##################
 # AUTHENTICATION #
 ##################
+
+AUTH_USER_MODEL = "users.User"
 
 LOGIN_URL = '/accounts/login/'
 
