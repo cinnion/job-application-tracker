@@ -55,7 +55,7 @@ Homepage = "https://www.ka8zrt.com"
 Documentation = "https://www.ka8zrt.com"
 
 [project.scripts]
-manage = "unemployment.manage:main"
+manage = "job_application_tracker.manage:main"
 
 [project.optional-dependencies]
 dev = [
@@ -75,7 +75,7 @@ remotedebug = [
 ]
 
 [tool.pytest.ini_options]
-django_settings_module = "unemployment.settings"                # Our Django project settings
+django_settings_module = "job_application_tracker.settings"     # Our Django project settings
 addopts = [
     "--cov-report=term-missing",                                # Show missing lines in terminal output
     "--cov-report=html=htmlcov",                                # Generage an HTML report in the htmlcov directory
@@ -131,5 +131,5 @@ extend-ignore = [
 py-modules = [
     "applications",
     "applications_ini",
-    "unemployment",
+    "job_application_tracker",
 ]

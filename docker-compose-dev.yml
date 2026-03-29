@@ -4,15 +4,15 @@ services:
       context: .
       dockerfile: ./docker/py-wsgi/Dockerfile.prod
       tags:
-        - unemployment-py-wsgi:latest
+        - job-application-tracker-py-wsgi:latest
       target: production
-    image: unemployment-py-wsgi
+    image: job-application-tracker-py-wsgi
     env_file:
       - ./.env
-    command: gunicorn unemployment.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn job-application-tracker.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/var/www/unemployment/web/staticfiles
-      - media_volume:/var/www/unemployment/web/mediafiles
+      - static_volume:/var/www/job-application-tracker/web/staticfiles
+      - media_volume:/var/www/job-application-tracker/web/mediafiles
     deploy:
       replicas: 1
       restart_policy:
@@ -24,11 +24,11 @@ services:
       context: ./docker/web
       dockerfile: Dockerfile
       tags:
-        - unemployment-web:latest
-    image: unemployment-web
+        - job-application-tracker-web:latest
+    image: job-application-tracker-web
     volumes:
-      - static_volume:/var/www/unemployment/web/staticfiles
-      - media_volume:/var/www/unemployment/web/mediafiles
+      - static_volume:/var/www/job-application-tracker/web/staticfiles
+      - media_volume:/var/www/job-application-tracker/web/mediafiles
     ports:
       - 8000:80
     depends_on:

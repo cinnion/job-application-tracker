@@ -42,14 +42,14 @@ RUN npm run build
 FROM python:3.13-alpine as production
 
 # Create the directory for the app user
-RUN mkdir -p /var/www/unemployment
+RUN mkdir -p /var/www/job-application-tracker
 
 # Create the app user
 RUN addgroup -S app && adduser -S app -G app
 
 # Create the appropriate directories
-ENV HOME=/var/www/unemployment
-ENV APP_HOME=/var/www/unemployment/web
+ENV HOME=/var/www/job-application-tracker
+ENV APP_HOME=/var/www/job-application-tracker/web
 RUN mkdir $APP_HOME
 
 WORKDIR $APP_HOME

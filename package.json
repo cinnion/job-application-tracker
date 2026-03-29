@@ -1,5 +1,5 @@
 {
-  "name": "unemployment",
+  "name": "job-application-tracker",
   "version": "1.0.0",
   "description": "A job application tracking app",
   "main": "index.js",

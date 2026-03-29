@@ -1,4 +1,4 @@
-# unemployment
+# job-application-tracker
 An application for tracking job applications
 
 ## Goal
@@ -10,7 +10,7 @@ This is a work in progress at the time of this writing.
 
 ## Base requirements
 
-The base requirements for this application are those for Django 5.1, which according to the 
+The base requirements for this application are those for Django 5.1, which according to the
 release notes, is Python 3.10 or later, and npm. It is recommended to use Python 3.12, or perhaps 3.13,
 though that has not been tested as of this writing.
 
