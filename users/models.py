@@ -6,6 +6,9 @@ from django.utils.translation import gettext_lazy as _
 class User(AbstractUser):
     class Meta:
         db_table_comment = "The users for the site"
+        permissions = [
+            ("change_user_password", "Can change their user password"),
+        ]
 
     prefix = models.CharField(
         _("prefix"),
@@ -28,20 +31,6 @@ class User(AbstractUser):
         help_text=_("The user's name suffix, if any. 16 characters or less"),
         db_comment="The user's name suffix, if any.",
     )
-
-    lock_password = models.BooleanField(
-        _("lock password"),
-        default=False,
-        help_text=_("Designates whether the user's password is locked and cannot be change."),
-        db_comment="Prevent changing the password if this is True",
-    )
-
-    @property
-    def is_password_locked(self):
-        if self.lock_password is True:
-            return True
-
-        return False
 
     def get_full_name(self):
         data = [self.prefix, self.first_name, self.middle_name, self.last_name, self.suffix]
