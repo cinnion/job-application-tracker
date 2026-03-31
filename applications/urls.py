@@ -6,7 +6,7 @@ from . import views
 app_name = 'applications'
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path('', views.applications_list, name='application-list'),
-    path('<int:appid>/edit', views.application_details, name='application-details'),
-    path('new-application/', views.application_details, name='new-application'),
+    path('', views.Applications.as_view(), name='application-list'),
+    path("<int:appid>/edit", views.ApplicationDetails.as_view(), name="application-details"),
+    path("new-application/", views.ApplicationDetails.as_view(), name="new-application"),
 ]
