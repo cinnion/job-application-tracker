@@ -1,33 +1,22 @@
-from django.forms import ModelForm
 from django import forms
+from django.forms import ModelForm
 
 from . import models
 
 
 class DateInput(forms.DateInput):
-    input_type = 'date'
-
-
-class CreateApplication(ModelForm):
-    class Meta:
-        model = models.JobApplication
-        fields = [
-            'when',
-            'company',
-            'title',
-            'posting',
-            'confirm',
-            'notes',
-            'active',
-        ]
+    input_type = "date"
 
 
 class EditApplication(ModelForm):
     class Meta:
         model = models.JobApplication
-        exclude = ['id']
+        exclude = [
+            "id",
+            "user",
+        ]
 
         widgets = {
-            'when': DateInput(),
-            'rejected': DateInput(),
+            "when": DateInput(),
+            "rejected": DateInput(),
         }
