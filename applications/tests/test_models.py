@@ -1,6 +1,7 @@
 import datetime
 from unittest import mock
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
@@ -10,12 +11,38 @@ from applications.models import JobApplication
 
 
 class JobApplicationTestCase(TestCase):
+
+    test_user_1 = None
+    test_user_2 = None
+
+    @classmethod
+    def get_test_user(cls):
+        user_model = get_user_model()
+        return user_model.objects.get(username="testuser1")
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        print("Setting up test users")
+        user_model = get_user_model()
+
+        cls.test_user_1 = user_model.objects.create(
+            username="testuser1",
+            email="testuser1@example.com"
+        )
+
+        cls.test_user_2 = user_model.objects.create(
+            username="testuser2",
+            email="testuser2@example.com"
+        )
+
     def test_job_when_field_cannot_be_blank(self):
         # Arrange
 
         # Act
         with self.assertRaises(ValidationError) as cm:
             JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="",
                 company="Some company",
                 title="Some title",
@@ -31,6 +58,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_when_field_cannot_be_non_date(self):
         # Arrange
         obj = JobApplication(
+            user=self.get_test_user(),
             when="asdf",
             company="Some company",
             title="Some title",
@@ -49,6 +77,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_company_field_cannot_be_blank(self):
         # Arrange
         obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="",
             title="Some title",
@@ -70,6 +99,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         with self.assertRaises(IntegrityError) as cm:
             JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title=None,
@@ -82,9 +112,10 @@ class JobApplicationTestCase(TestCase):
         # Assert
         self.assertIn('null value in column "title" of relation "job_applications" violates not-null constraint', cm.exception.args[0])
 
-    def test_job_title_field_can_be_blank(self):
+    def test_job_title_field_cannot_be_blank(self):
         # Arrange
-        obj = JobApplication.objects.create(
+        obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="Some company",
             title="",
@@ -95,50 +126,15 @@ class JobApplicationTestCase(TestCase):
         )
 
         # Act
-        try:
+        with self.assertRaises(ValidationError) as cm:
             obj.full_clean()
-        except ValidationError:
-            self.fail("Title field with blank string raised ValidationError when it should not.")
 
-    def test_job_posting_field_cannot_be_null(self):
-        # Arrange
-
-        # Act
-        with self.assertRaises(IntegrityError) as cm:
-            JobApplication.objects.create(
-                when="1999-12-31",
-                company="Some company",
-                title="",
-                posting=None,
-                confirm="https://confirm.example.com",
-                notes="Some notes",
-                rejected="1999-12-31"
-            )
-
-        # Assert
-        self.assertIn('null value in column "posting" of relation "job_applications" violates not-null constraint', cm.exception.args[0])
-
-    def test_job_posting_field_can_be_blank(self):
-        # Arrange
-        obj = JobApplication.objects.create(
-            when="1999-12-31",
-            company="Some company",
-            title="",
-            posting="",
-            confirm="https://confirm.example.com",
-            notes="Some notes",
-            rejected="1999-12-31"
-        )
-
-        # Act
-        try:
-            obj.full_clean()
-        except ValidationError:
-            self.fail("Posting field with blank string raised ValidationError when it should not.")
+        self.assertEqual(cm.exception.messages, ["This field cannot be blank."])
 
     def test_job_posting_field_cannot_be_non_url(self):
         # Arrange Create the object with "asdf" for the posting field.
         obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="Some company",
             title="Some title",
@@ -157,6 +153,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_with_no_title_has_blank_title(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
             confirm="",
@@ -171,30 +168,13 @@ class JobApplicationTestCase(TestCase):
         # Assert
         self.assertEqual(obj.title, "")
 
-    def test_job_confirm_field_cannot_be_null(self):
-        # Arrange
-
-        # Act
-        with self.assertRaises(IntegrityError) as cm:
-            JobApplication.objects.create(
-                when="1999-12-31",
-                company="Some company",
-                title="",
-                posting="",
-                confirm=None,
-                notes="Some notes",
-                rejected="1999-12-31"
-            )
-
-        # Assert
-        self.assertIn('null value in column "confirm" of relation "job_applications" violates not-null constraint', cm.exception.args[0])
-
     def test_job_confirm_field_can_be_blank(self):
         # Arrange
-        obj = JobApplication.objects.create(
+        obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="Some company",
-            title="",
+            title="Some title",
             posting="",
             confirm="",
             notes="Some notes",
@@ -210,6 +190,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_confirm_field_cannot_be_non_url(self):
         # Arrange
         obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="Some company",
             title="Some title",
@@ -225,12 +206,13 @@ class JobApplicationTestCase(TestCase):
 
         self.assertEqual(cm.exception.messages, ['Enter a valid URL.'])
 
-    def test_job_with_no_confirm_has_blank_confirm(self):
+    def test_job_with_no_confirm_has_null_confirm(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
-            title="",
+            title="Some title",
             posting="",
             notes="Some notes...",
             active=True,
@@ -240,32 +222,15 @@ class JobApplicationTestCase(TestCase):
         obj.refresh_from_db()
 
         # Assert
-        self.assertEqual(obj.confirm, "")
-
-    def test_job_notes_field_cannot_be_null(self):
-        # Arrange
-
-        # Act
-        with self.assertRaises(IntegrityError) as cm:
-            JobApplication.objects.create(
-                when="1999-12-31",
-                company="Some company",
-                title="",
-                posting="",
-                confirm="",
-                notes=None,
-                rejected="1999-12-31"
-            )
-
-        # Assert
-        self.assertIn('null value in column "notes" of relation "job_applications" violates not-null constraint', cm.exception.args[0])
+        self.assertIsNone(obj.confirm)
 
     def test_job_notes_field_can_be_blank(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="Some company",
-            title="",
+            title="Some title",
             posting="",
             confirm="",
             notes="",
@@ -278,12 +243,13 @@ class JobApplicationTestCase(TestCase):
         except ValidationError:
             self.fail("Notes field with blank string raised ValidationError when it should not.")
 
-    def test_job_with_no_notes_has_blank_notes(self):
+    def test_job_with_no_notes_has_null_notes(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
-            title="",
+            title="Some title",
             posting="",
             confirm="",
             active=True,
@@ -293,11 +259,12 @@ class JobApplicationTestCase(TestCase):
         obj.refresh_from_db()
 
         # Assert
-        self.assertEqual(obj.notes, "")
+        self.assertIsNone(obj.notes)
 
     def test_job_with_no_active_has_true_default(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
             title="",
@@ -315,6 +282,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_with_true_active_has_true(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
             title="",
@@ -333,6 +301,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_with_false_active_has_false(self):
         # Arrange
         obj = JobApplication.objects.create(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
             title="",
@@ -351,9 +320,10 @@ class JobApplicationTestCase(TestCase):
     def test_job_with_blank_active_gets_validation_error(self):
         # Arrange
         obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="some company",
-            title="",
+            title="Some title",
             posting="",
             confirm="",
             active="",
@@ -373,6 +343,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         try:
             obj = JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -396,6 +367,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         try:
             obj = JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -420,6 +392,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         with self.assertRaises(ValidationError) as cm:
             JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -435,6 +408,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_rejected_field_cannot_be_non_date(self):
         # Arrange
         obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             company="Some company",
             title="Some title",
@@ -457,6 +431,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -479,6 +454,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -501,6 +477,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -523,6 +500,7 @@ class JobApplicationTestCase(TestCase):
         # Act
         with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
+                user=self.get_test_user(),
                 when="1999-12-31",
                 company="Some company",
                 title="Some title",
@@ -541,6 +519,7 @@ class JobApplicationTestCase(TestCase):
     def test_job_string_formats_properly(self):
         # Arrange
         obj = JobApplication(
+            user=self.get_test_user(),
             when="1999-12-31",
             title="Some title",
             company="Some company"
