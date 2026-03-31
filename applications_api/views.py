@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from django.db.models.query import QuerySet
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status, generics
 from applications.models import JobApplication
@@ -9,7 +11,14 @@ from datetime import date
 
 class JobApplications(generics.GenericAPIView):
     serializer_class = JobApplicationSerializer
-    queryset = JobApplication.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self) -> QuerySet:
+        """
+        This view will return a QuerySet of all the applications made by the currently authenticated user.
+        """
+        user_id = self.request.user.id
+        return JobApplication.objects.filter(user_id=user_id)
 
     def get_sort(self, request) -> Optional[List[str]]:
         """
@@ -42,7 +51,7 @@ class JobApplications(generics.GenericAPIView):
         length = int(request.GET.get("length", 10))
         end_num = start_num + length
         search_param = request.GET.get("search[value]")
-        job_applications = JobApplication.objects.all()
+        job_applications = self.get_queryset()
         total_applications = job_applications.count()
         total_filtered = total_applications
         sort_order = self.get_sort(request)
