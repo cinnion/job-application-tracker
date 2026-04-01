@@ -93,7 +93,7 @@ class JobApplicationTestCase(TestCase):
         with self.assertRaises(ValidationError) as cm:
             obj.full_clean()
 
-        self.assertEqual(cm.exception.messages, ['This field cannot be blank.'])
+        self.assertEqual(cm.exception.messages, ["This field cannot be blank."])
 
     def test_job_title_field_cannot_be_null(self):
         # Arrange
@@ -151,7 +151,7 @@ class JobApplicationTestCase(TestCase):
         with self.assertRaises(ValidationError) as cm:
             obj.full_clean()
 
-        self.assertEqual(cm.exception.messages, ['Enter a valid URL.'])
+        self.assertEqual(cm.exception.messages, ["Enter a valid URL."])
 
     def test_job_with_no_title_has_blank_title(self):
         # Arrange
@@ -207,7 +207,7 @@ class JobApplicationTestCase(TestCase):
         with self.assertRaises(ValidationError) as cm:
             obj.full_clean()
 
-        self.assertEqual(cm.exception.messages, ['Enter a valid URL.'])
+        self.assertEqual(cm.exception.messages, ["Enter a valid URL."])
 
     def test_job_with_no_confirm_has_null_confirm(self):
         # Arrange
@@ -355,9 +355,9 @@ class JobApplicationTestCase(TestCase):
                 notes="",
             )
         except ValidationError:
-            self.fail('Rejected field of none raised ValidationError when it should not.')
+            self.fail("Rejected field of none raised ValidationError when it should not.")
         except IntegrityError:
-            self.fail('Rejected field of none raised database error when it should not.')
+            self.fail("Rejected field of none raised database error when it should not.")
 
         obj.refresh_from_db()
 
@@ -380,9 +380,9 @@ class JobApplicationTestCase(TestCase):
                 rejected=None
             )
         except ValidationError:
-            self.fail('Rejected field of none raised ValidationError when it should not.')
+            self.fail("Rejected field of none raised ValidationError when it should not.")
         except IntegrityError:
-            self.fail('Rejected field of none raised database error when it should not.')
+            self.fail("Rejected field of none raised database error when it should not.")
 
         obj.refresh_from_db()
 
@@ -434,7 +434,7 @@ class JobApplicationTestCase(TestCase):
         mocked = datetime.datetime(2020, 1, 31, 2, 4, 6, tzinfo=datetime.timezone.utc)
 
         # Act
-        with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
+        with mock.patch("django.utils.timezone.now", mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
                 user=self.get_test_user(),
                 when="1999-12-31",
@@ -457,7 +457,7 @@ class JobApplicationTestCase(TestCase):
         past_time = timezone.make_aware(datetime.datetime(1999, 1, 31, 2, 4, 6))
 
         # Act
-        with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
+        with mock.patch("django.utils.timezone.now", mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
                 user=self.get_test_user(),
                 when="1999-12-31",
@@ -480,7 +480,7 @@ class JobApplicationTestCase(TestCase):
         mocked = datetime.datetime(2020, 1, 31, 2, 4, 6, tzinfo=datetime.timezone.utc)
 
         # Act
-        with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
+        with mock.patch("django.utils.timezone.now", mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
                 user=self.get_test_user(),
                 when="1999-12-31",
@@ -503,7 +503,7 @@ class JobApplicationTestCase(TestCase):
         past_time = timezone.make_aware(datetime.datetime(1999, 1, 31, 2, 4, 6))
 
         # Act
-        with mock.patch('django.utils.timezone.now', mock.Mock(return_value=mocked)):
+        with mock.patch("django.utils.timezone.now", mock.Mock(return_value=mocked)):
             obj = JobApplication.objects.create(
                 user=self.get_test_user(),
                 when="1999-12-31",
@@ -534,7 +534,49 @@ class JobApplicationTestCase(TestCase):
         result = obj.__str__()
 
         # Assert
-        self.assertEqual(result, '1999-12-31: Some title @ Some company')
+        self.assertEqual(result, "1999-12-31: Some title @ Some company")
+
+    def test_interviewed_zero_interviews_returns_false(self):
+        # Arrange
+        obj = JobApplication(
+            company="Some company",
+            title="Some title",
+            interviews=0
+        )
+
+        # Act
+        results = obj.interviewed
+
+        # Assert
+        self.assertFalse(results)
+
+    def test_interviewed_negative_interviews_returns_false(self):
+        # Arrange
+        obj = JobApplication(
+            company="Some company",
+            title="Some title",
+            interviews=-1
+        )
+
+        # Act
+        results = obj.interviewed
+
+        # Assert
+        self.assertFalse(results)
+
+    def test_interviewed_positive_interviews_returns_true(self):
+        # Arrange
+        obj = JobApplication(
+            company="Some company",
+            title="Some title",
+            interviews=5
+        )
+
+        # Act
+        results = obj.interviewed
+
+        # Assert
+        self.assertTrue(results)
 
     def test_str_dunder_expected_results(self):
         # Arrange
@@ -557,5 +599,5 @@ class JobApplicationTestCase(TestCase):
         self.assertEqual(results, "1999-12-31: Some title @ Some company")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

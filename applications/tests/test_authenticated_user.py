@@ -143,7 +143,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -151,18 +151,18 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 3, "There should be three fields with errors")
         self.assertFormError(
             form,
-            'company',
-            'This field is required.'
+            "company",
+            "This field is required."
         )
         self.assertFormError(
             form,
-            'title',
-            'This field is required.'
+            "title",
+            "This field is required."
         )
         self.assertFormError(
             form,
-            'interviews',
-            'This field is required.'
+            "interviews",
+            "This field is required."
         )
 
     def test_post_request_with_blank_company_gets_errors(self):
@@ -175,7 +175,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -183,8 +183,8 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 1, "There should be one field with errors")
         self.assertFormError(
             form,
-            'company',
-            'This field is required.'
+            "company",
+            "This field is required."
         )
 
     def test_post_request_with_blank_title_gets_errors(self):
@@ -197,7 +197,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -205,8 +205,8 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 1, "There should be one field with errors")
         self.assertFormError(
             form,
-            'title',
-            'This field is required.'
+            "title",
+            "This field is required."
         )
 
     def test_post_request_with_blank_interviews_gets_errors(self):
@@ -219,7 +219,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -227,8 +227,8 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 1, "There should be one field with errors")
         self.assertFormError(
             form,
-            'interviews',
-            'This field is required.'
+            "interviews",
+            "This field is required."
         )
 
     def test_post_request_with_bad_when_gets_errors(self):
@@ -242,7 +242,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -250,8 +250,8 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 1, "There should only be one field with an error")
         self.assertFormError(
             form,
-            'when',
-            'Enter a valid date.'
+            "when",
+            "Enter a valid date."
         )
 
     # TODO: Add validation and tests for future dates.
@@ -268,7 +268,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -276,8 +276,8 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 1, "There should only be one field with an error")
         self.assertFormError(
             form,
-            'posting',
-            'Enter a valid URL.'
+            "posting",
+            "Enter a valid URL."
         )
 
     def test_post_request_with_empty_posting_url_gets_no_errors(self):
@@ -375,7 +375,7 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
 
         # Act
         response = self.client.post(self.test_url, data)
-        form = response.context_data['form']
+        form = response.context_data["form"]
 
         # Assert
         self.assertEqual(response.status_code, 200)
@@ -383,8 +383,8 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(len(form.errors), 1, "There should only be one field with an error")
         self.assertFormError(
             form,
-            'interviews',
-            'Enter a whole number.'
+            "interviews",
+            "Enter a whole number."
         )
 
     def test_put_request_gets_an_error(self):
@@ -433,5 +433,5 @@ class AuthenticatedUserNewApplicationDetailsTests(BaseAuthenticatedUserApplicati
         self.assertEqual(response.status_code, 405)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
