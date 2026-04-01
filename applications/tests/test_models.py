@@ -1,4 +1,5 @@
 import datetime
+import unittest
 from unittest import mock
 
 from django.contrib.auth import get_user_model
@@ -11,7 +12,6 @@ from applications.models import JobApplication
 
 
 class JobApplicationTestCase(TestCase):
-
     test_user_1 = None
     test_user_2 = None
 
@@ -53,7 +53,8 @@ class JobApplicationTestCase(TestCase):
             )
 
         # Assert
-        self.assertEqual(cm.exception.message, '“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD format.')
+        self.assertEqual(cm.exception.message,
+                         '“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD format.')
 
     def test_job_when_field_cannot_be_non_date(self):
         # Arrange
@@ -72,7 +73,8 @@ class JobApplicationTestCase(TestCase):
         with self.assertRaises(ValidationError) as cm:
             obj.full_clean()
 
-        self.assertEqual(cm.exception.messages, ['“asdf” value has an invalid date format. It must be in YYYY-MM-DD format.'])
+        self.assertEqual(cm.exception.messages,
+                         ['“asdf” value has an invalid date format. It must be in YYYY-MM-DD format.'])
 
     def test_job_company_field_cannot_be_blank(self):
         # Arrange
@@ -110,7 +112,8 @@ class JobApplicationTestCase(TestCase):
             )
 
         # Assert
-        self.assertIn('null value in column "title" of relation "job_applications" violates not-null constraint', cm.exception.args[0])
+        self.assertIn('null value in column "title" of relation "job_applications" violates not-null constraint',
+                      cm.exception.args[0])
 
     def test_job_title_field_cannot_be_blank(self):
         # Arrange
@@ -403,7 +406,8 @@ class JobApplicationTestCase(TestCase):
             )
 
         # Assert
-        self.assertEqual(cm.exception.message, '“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD format.')
+        self.assertEqual(cm.exception.message,
+                         '“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD format.')
 
     def test_job_rejected_field_cannot_be_non_date(self):
         # Arrange
@@ -422,7 +426,8 @@ class JobApplicationTestCase(TestCase):
         with self.assertRaises(ValidationError) as cm:
             obj.full_clean()
 
-        self.assertEqual(cm.exception.messages, ['“asdf” value has an invalid date format. It must be in YYYY-MM-DD format.'])
+        self.assertEqual(cm.exception.messages,
+                         ['“asdf” value has an invalid date format. It must be in YYYY-MM-DD format.'])
 
     def test_job_created_at_field_defaults_to_now(self):
         # Arrange
@@ -530,3 +535,27 @@ class JobApplicationTestCase(TestCase):
 
         # Assert
         self.assertEqual(result, '1999-12-31: Some title @ Some company')
+
+    def test_str_dunder_expected_results(self):
+        # Arrange
+        obj = JobApplication(
+            when="1999-12-31",
+            company="Some company",
+            title="Some title",
+            posting="Some posting URL",
+            confirm="Some confirm URL",
+            notes="Some notes",
+            active=False,
+            interviews=0,
+            rejected="2001-01-02"
+        )
+
+        # Act
+        results = str(obj)
+
+        # Assert
+        self.assertEqual(results, "1999-12-31: Some title @ Some company")
+
+
+if __name__ == '__main__':
+    unittest.main()
