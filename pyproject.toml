@@ -66,28 +66,17 @@ dev = [
     "django-upgrade==1.30.0",                                   # Upgrade tool
     "flake8==7.3.0",                                            # Coding style
     "pipdeptree==2.32.0",                                       # To see dependency tree
-
-    "pytest==8.3.4",
-    "pytest-cov==7.0.0",
-    "pytest-cases==3.8.6",
-    "pytest-django==4.12.0",
 ]
 remotedebug = [
     "pydevd-pycharm==251.26094.141"
-]
-
-[tool.pytest.ini_options]
-django_settings_module = "job_application_tracker.settings"     # Our Django project settings
-addopts = [
-    "--cov-report=term-missing",                                # Show missing lines in terminal output
-    "--cov-report=html=htmlcov",                                # Generage an HTML report in the htmlcov directory
-    "--cov-fail-under=40",                                      # Fail the test run if coverage is below 40%
 ]
 
 [tool.coverage.run]
 branch = true
 source = [ "." ]
 dynamic_context = "test_function"
+data_file = ".coverage"
+parallel = true
 omit = [
     # Virtual environment and build artifacts
     ".venv/*",
@@ -116,6 +105,9 @@ show_missing = true             # Show missing lines
 directory = "htmlcov"           # Directory to write the HTML report files to
 show_contexts = true            # Show the context for each covered line in the HTML report
 title = "Job Application Tracker Test Coverage Report"          # Title for the HTML report
+
+[tool.coverage.xml]
+output = "coverage.xml"
 
 [tool.flake8]
 max-line-length = 120
