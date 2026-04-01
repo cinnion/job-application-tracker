@@ -15,6 +15,7 @@ class Applications(LoginRequiredMixin, TemplateView):
     """
     http_method_names = ["get"]
     template_name = "ApplicationList.html"
+    login_url = reverse_lazy("login")
 
 
 class ApplicationDetails(LoginRequiredMixin, UpdateView):
@@ -26,6 +27,7 @@ class ApplicationDetails(LoginRequiredMixin, UpdateView):
     form_class = EditApplication
     pk_url_kwarg = "appid"
     template_name = "ApplicationDetails.html"
+    login_url = reverse_lazy("login")
     success_url = reverse_lazy("applications:application-list")
 
     def get_object(self, queryset=None) -> Model:
@@ -54,7 +56,7 @@ class ApplicationDetails(LoginRequiredMixin, UpdateView):
             if not app.user_id == self.request.user.id:
                 raise PermissionDenied("You cannot change an application owned by another user")
         else:
-            app.user_id = self.request.user
+            app.user = self.request.user
 
         app.save()
         return super().form_valid(form)
