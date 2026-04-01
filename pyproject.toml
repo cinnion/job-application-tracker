@@ -90,6 +90,10 @@ omit = [
     "*/templates/*",
     "*/__init__.py",
     "manage.py",
+    "job_application_tracker/asgi.py",
+    "job_application_tracker/settings.py",
+    "job_application_tracker/urls.py",
+    "job_application_tracker/wsgi.py",
 
     # Test files themselves
     "*/tests/*",
