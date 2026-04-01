@@ -137,4 +137,4 @@ class JobApplication(models.Model):
         Method used when converting to a string. Only return a far simpler representation
         of the record in this instance.
         """
-        return f"{self.when}: {self.title} @ {self.company}".format(self.when, self.title, self.company)
+        return f"{self.when}: {self.title} @ {self.company}"
