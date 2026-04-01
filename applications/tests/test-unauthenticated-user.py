@@ -1,0 +1,103 @@
+import unittest
+
+from django.test import TestCase, Client
+from django.urls import reverse
+
+
+class UnauthenticatedApplicationTests(TestCase):
+    def setUp(self):
+        """
+        Create our client for use by the tests.
+        """
+        self.client = Client()
+
+        self.login_url = reverse("login")
+
+    def test_unauthenticated_user_gets_redirected_from_applications(self):
+        # Arrange
+        test_url = reverse("applications:application-list")
+
+        # Act
+        response = self.client.get(test_url)
+
+        # Assert
+        self.assertRedirects(
+            response,
+            f"{self.login_url}?next={test_url}",
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_unauthenticated_user_gets_redirected_from_application_details(self):
+        # Arrange
+        test_url = reverse("applications:application-details", args=(1,))
+
+        # Act
+        response = self.client.get(test_url)
+
+        # Assert
+        self.assertRedirects(
+            response,
+            f"{self.login_url}?next={test_url}",
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_unauthenticated_user_edit_application_post_gets_redirected(self):
+        # Arrange
+        data = {
+            "when": "1999-12-31",
+            "company": "Some company",
+            "title": "Some title"
+        }
+        test_url = reverse("applications:application-details", args=(1,))
+
+        # Act
+        response = self.client.post(test_url, data)
+
+        # Assert
+        self.assertRedirects(
+            response,
+            f"{self.login_url}?next={test_url}",
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_unauthenticated_user_gets_redirected_from_new_application(self):
+        # Arrange
+        test_url = reverse("applications:new-application")
+
+        # Act
+        response = self.client.get(test_url)
+
+        # Assert
+        self.assertRedirects(
+            response,
+            f"{self.login_url}?next={test_url}",
+            status_code=302,
+            target_status_code=200
+        )
+
+    def test_unauthenticated_user_post_gets_redirected_from_new_application(self):
+        # Arrange
+        data = {
+            "when": "1999-12-31",
+            "company": "Some company",
+            "title": "Some title"
+        }
+        test_url = reverse("applications:new-application")
+
+        # Act
+        response = self.client.post(test_url, data)
+
+        # Assert
+        self.assertRedirects(
+            response,
+            f"{self.login_url}?next={test_url}",
+            status_code=302,
+            target_status_code=200
+        )
+
+
+if __name__ == '__main__':
+    unittest.main()
