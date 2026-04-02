@@ -5,7 +5,7 @@ import unittest
 from typing import Any
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 
 from applications.forms import EditApplication
@@ -41,7 +41,7 @@ class BaseAuthenticatedUserApplication(TestCase):
         """
         Create our authenticated client for use by the individual tests.
         """
-        self.client = Client()
+        self.client = self.client_class()
         self.client.force_login(self.test_user_1)
 
 
@@ -1346,7 +1346,7 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
         and that an error is logged.
         """
         # Arrange
-        client = Client()
+        client = self.client_class()
         client.force_login(self.test_user_2)
 
         # Act
@@ -1377,7 +1377,7 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
             "rejected": self.test_record.rejected,
             "interviews": self.test_record.interviews,
         }
-        client = Client()
+        client = self.client_class()
         client.force_login(self.test_user_2)
 
         # Act
@@ -1411,7 +1411,7 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
             "rejected": self.test_record.rejected,
             "interviews": "asdf",
         }
-        client = Client()
+        client = self.client_class()
         client.force_login(self.test_user_2)
 
         # Act
@@ -1429,7 +1429,7 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
     def test_edit_post_request_attempt_explicit_id_and_user_id_override_fails(self):
         """
         Here, we are testing to make sure that a user cannot maliciously attempt to save a bogus record with both the
-        id and user_id specified. The user should get a HTTP 404 error and the fact should be logged.
+        id and user_id specified. The user should get an HTTP 404 error and the fact should be logged.
         """
         # Arrange
         data = {
@@ -1445,7 +1445,7 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
             "rejected": self.test_record.rejected,
             "interviews": "asdf",
         }
-        client = Client()
+        client = self.client_class()
         client.force_login(self.test_user_2)
 
         # Act
