@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.db.models import Model
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
@@ -52,11 +51,16 @@ class ApplicationDetails(LoginRequiredMixin, Log404Mixin, UpdateView):
         return super().get_queryset().filter(user_id=self.request.user.id)
 
     def form_valid(self, form):
+        """
+        Set the user field on new records so that Django sets user_id in the backend.
+
+        NOTE: Protections against record hijacking is not needed, since Django will raise a Http404 error before we even
+        get here.
+        """
         app = form.save(commit=False)
-        if app.pk or app.id:
-            if not app.user_id == self.request.user.id:
-                raise PermissionDenied("You cannot change an application owned by another user")
-        else:
+
+        #  Only set the user on new records
+        if not (app.pk or app.id):
             app.user = self.request.user
 
         app.save()
