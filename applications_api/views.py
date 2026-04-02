@@ -48,7 +48,7 @@ class JobApplications(generics.GenericAPIView):
 
     def get(self, request):
         draw = int(request.GET.get("draw", 1))
-        start_num = int(request.GET.get("start", 1))
+        start_num = int(request.GET.get("start", 0))
         length = int(request.GET.get("length", 10))
         end_num = start_num + length
         search_param = request.GET.get("search[value]")
