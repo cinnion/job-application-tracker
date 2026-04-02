@@ -24,7 +24,7 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("about", views.about, name="about"),
     path('applications/', include('applications.urls', namespace='applications')),
-    path('api/jobapplications/', include('applications_api.urls')),
+    path('api/v1/jobapplications/', include('applications_api.urls', namespace="applications-api")),
     path('admin/', admin.site.urls),
 ]
 

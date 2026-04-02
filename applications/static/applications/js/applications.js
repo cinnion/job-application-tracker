@@ -1,7 +1,7 @@
 $(document).ready(function () {
     const table = $('#jobapplications').DataTable({
         ajax: {
-            url: '/api/jobapplications/',
+            url: '/api/v1/jobapplications/',
             dataSrc: 'job_applications'
         },
         serverSide: true,
