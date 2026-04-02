@@ -1,0 +1,78 @@
+[
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$ATlwBOUWcGcPG9deiJH4BD$vh1sv3HY4mtQpJZXQdNuJ0TgyW0PpjdFWDDsVZKhWG4=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "testuser1",
+        "first_name": "",
+        "last_name": "",
+        "email": "testuser1@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-04-02T08:11:47.456Z",
+        "prefix": "",
+        "middle_name": "",
+        "suffix": ""
+    }
+},
+{
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$OWdlPIyxyHePoc3lXnOpQb$LeurQMTOPvtfcGNFJtLLMcnpwyDZDuNh27xj1I6tO0E=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "testuser2",
+        "first_name": "",
+        "last_name": "",
+        "email": "testuser2@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T08:11:47.462Z",
+        "prefix": "",
+        "middle_name": "",
+        "suffix": ""
+    }
+},
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$ZR1Be1gMU5JwDfXHBqmcJ5$qrcUKUwv7kZy2WaZZwvELH765DrOZCE5e8BZ7M5uyO4=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "testuser3",
+        "first_name": "",
+        "last_name": "",
+        "email": "testuser3",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T08:11:47.464Z",
+        "prefix": "",
+        "middle_name": "",
+        "suffix": ""
+    }
+},
+{
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$rRICc6mHmDSmI4V7AKsXej$xwvAMUCIMKVE3irmMOkLxLLKWr/9e1OFAqs69KuXpFU=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "testuser4",
+        "first_name": "",
+        "last_name": "",
+        "email": "testuser4@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-04-02T08:11:47.466Z",
+        "prefix": "",
+        "middle_name": "",
+        "suffix": ""
+    }
+}
+]
