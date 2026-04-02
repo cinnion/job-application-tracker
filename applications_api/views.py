@@ -12,6 +12,7 @@ from datetime import date
 class JobApplications(generics.GenericAPIView):
     serializer_class = JobApplicationSerializer
     permission_classes = [IsAuthenticated]
+    http_method_names = ['get']
 
     def get_queryset(self) -> QuerySet:
         """
@@ -100,6 +101,7 @@ class JobApplications(generics.GenericAPIView):
 class JobApplicationDetail(generics.GenericAPIView):
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def get_application(self, pk):
         try:
