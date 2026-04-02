@@ -5,11 +5,12 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView
 from django.views.generic.base import TemplateView
 
+from core.views.mixins import Log404Mixin
 from .forms import EditApplication
 from .models import JobApplication
 
 
-class Applications(LoginRequiredMixin, TemplateView):
+class Applications(LoginRequiredMixin, Log404Mixin, TemplateView):
     """
     Return the DataTables scaffolding which will be used to request the job application data via the API.
     """
@@ -18,7 +19,7 @@ class Applications(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy("login")
 
 
-class ApplicationDetails(LoginRequiredMixin, UpdateView):
+class ApplicationDetails(LoginRequiredMixin, Log404Mixin, UpdateView):
     """
     Handle the adding and updating of the details for a job application.
     """
