@@ -102,7 +102,7 @@ omit = [
 
 [tool.coverage.report]
 skip_empty = true               # Don't report on empty files (those that have no statements)
-fail_under = 40                 # Fail the build if the total coverage is below this minimum percentage
+fail_under = 80                 # Fail the build if the total coverage is below this minimum percentage
 show_missing = true             # Show missing lines
 
 [tool.coverage.html]
