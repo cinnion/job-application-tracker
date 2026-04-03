@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -33,5 +33,8 @@ class User(AbstractUser):
     )
 
     def get_full_name(self):
-        data = [self.prefix, self.first_name, self.middle_name, self.last_name, self.suffix]
+        if self.middle_name and len(self.middle_name) == 1:
+            data = [self.prefix, self.first_name, self.middle_name + ".", self.last_name, self.suffix]
+        else:
+            data = [self.prefix, self.first_name, self.middle_name, self.last_name, self.suffix]
         return " ".join(filter(None, data))
