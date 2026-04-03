@@ -5,23 +5,20 @@ These are tests which deal with authenticated user requests for the URLs associa
 import json
 import os
 import time
-from typing import TypeVar
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from applications.models import JobApplication
-
-# Define a generic type
-T = TypeVar("T", bound=models.Model)
+from core.tests.mixins import DataTableTestMixin, M, SortingCriteria, DataTableColumn
 
 
 # noinspection DuplicatedCode - While the body is the same as BaseAuthenticatedUserApplication, the parent is different.
-class BaseAuthenticatedUserApplicationApi(APITestCase):
+class BaseAuthenticatedUserJobApplicationsApi(APITestCase):
     """
     These methods are common to all the tests with an authenticated user client.
     """
@@ -30,7 +27,7 @@ class BaseAuthenticatedUserApplicationApi(APITestCase):
     test_user_3: AbstractBaseUser
 
     @classmethod
-    def loadFixtureData(cls, model_class: type[T], datafile: str) -> list[T]:
+    def loadFixtureData(cls, model_class: type[M], datafile: str) -> list[M]:
         """
         Load the data from a fixture data file, bulk insert, and return the resulting objects.
         """
@@ -43,6 +40,7 @@ class BaseAuthenticatedUserApplicationApi(APITestCase):
         # Build our set of unsaved records
         records = [
             model_class(**{
+                "id": record["pk"],
                 **record["fields"],
                 "user": getattr(cls, f"test_user_{record["fields"]["user"]}")
             }) if model_class.__name__ == "JobApplication"
@@ -73,13 +71,14 @@ class BaseAuthenticatedUserApplicationApi(APITestCase):
 
         # Save the users as class attributes
         for index, value in enumerate(users):
-            setattr(cls, f"test_user_{index+1}", value)
+            setattr(cls, f"test_user_{index + 1}", value)
 
         # Load our data for the job applications
-        cls.records = cls.loadFixtureData(JobApplication, "fixtures/job_applications.json")
+        records = cls.loadFixtureData(JobApplication, "fixtures/job_applications.json")
 
         end = time.perf_counter_ns()
-        print(f"Data has been loaded - it took {(end - start) / 1_000_000_000} seconds to load {len(users)} users and {len(cls.records)} job applications.")
+        print(
+            f"Data has been loaded - it took {(end - start) / 1_000_000_000} seconds to load {len(users)} users and {len(records)} job applications.")
 
     def setUp(self):
         """
@@ -89,7 +88,52 @@ class BaseAuthenticatedUserApplicationApi(APITestCase):
         self.client.force_login(self.test_user_1)
 
 
-class AuthenticatedUserApplicationApiTests(BaseAuthenticatedUserApplicationApi):
+# noinspection DuplicatedCode
+class AuthenticatedUserJobApplicationsApiTests(BaseAuthenticatedUserJobApplicationsApi, DataTableTestMixin):
+    api_url = "applications-api:applications-list"
+
+    # @formatter:off
+    columns = [
+        #               data       name        Searchable  Orderable   Value   Regex
+        DataTableColumn("",        "",         True,       False,      "",     False),
+        DataTableColumn("id",      "id",       False,      True,       "",     False),
+        DataTableColumn("when",    "when",     True,       True,       "",     False),
+        DataTableColumn("company", "company",  True,       True,       "",     False),
+        DataTableColumn("title",   "title",    True,       True,       "",     False),
+        DataTableColumn("posting", "posting",  True,       True,       "",     False),
+        DataTableColumn("confirm", "confirm",  True,       True,       "",     False),
+        DataTableColumn("notes",   "notes",    True,       True,       "",     False),
+        DataTableColumn("active",  "active",   True,       True,       "",     False),
+        DataTableColumn("9",       "edit",     True,       True,       "",     False),
+    ]
+    # @formatter:on
+
+    maxDiff = None
+
+    model = JobApplication
+
+    @staticmethod
+    def transform_record_into_dict(record: JobApplication) -> dict:
+        """
+        Create a dictionary of values from a JobApplication record for conversion to a JSON data row.
+
+        This is used to build up an expected response data structure for validating the response from the view.
+        """
+        return {
+            "id": record.id,
+            "when": str(record.when),
+            "company": record.company,
+            "title": record.title,
+            "posting": record.posting,
+            "confirm": record.confirm,
+            "notes": record.notes,
+            "active": record.active,
+            "interviews": record.interviews,
+            "rejected": record.rejected,
+            "created_at": record.created_at.astimezone().isoformat(),
+            "updated_at": record.updated_at.astimezone().isoformat(),
+            "user": record.user_id,
+        }
 
     @classmethod
     def setUpClass(cls):
@@ -117,45 +161,68 @@ class AuthenticatedUserApplicationApiTests(BaseAuthenticatedUserApplicationApi):
         self.assertEqual(response["Content-Type"], "application/json")
         self.assertEqual(response.data, expected_data)
 
-    def test_get_application_list_with_query_data(self):
+    def test_get_list_with_start_length_query_data_returns_correct_data(self):
         # Arrange
-        client = self.client_class()
-        client.force_login(self.test_user_2)
-
-        expected_data = {
-            "status": "success",
-            "draw": 3,
-            "recordsTotal": 200,
-            "recordsFiltered": 200,
-            "job_applications": [
-                {
-                    "id": u.id,
-                    "when": u.when,
-                    "company": u.company,
-                    "title": u.title,
-                    "posting": u.posting,
-                    "confirm": u.confirm,
-                    "notes": u.notes,
-                    "active": u.active,
-                    "interviews": u.interviews,
-                    "rejected": u.rejected,
-                    "created_at": u.created_at.astimezone().isoformat(),
-                    "updated_at": u.updated_at.astimezone().isoformat(),
-                    "user": u.user_id,
-                }
-                for u in self.records[0:10] if u.user_id == self.test_user_2.id
-            ]
-        }
-        query_data = {
-            "draw": 3,
-        }
-        test_url = reverse("applications-api:applications-list", query=query_data)
+        client, expected_data, test_url = self.get_test_arrangement(
+            user=self.test_user_3,
+            draw=3,
+            start=25,
+            length=25
+        )
 
         # Act
         response = client.get(test_url, format="json")
 
         # Assert
-        self.maxDiff = None
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response["Content-Type"], "application/json")
+        del response.data["job_applications"].serializer
+        response.data["job_applications"] = list(response.data["job_applications"])
+        self.assertEqual(response.data, expected_data)
+
+    def test_get_list_with_search_query_data_returns_correct_data(self):
+        # Arrange
+        def filter_func(qs: QuerySet) -> QuerySet:
+            return qs.filter(company__icontains="Micro")
+
+        client, expected_data, test_url = self.get_test_arrangement(
+            user=self.test_user_3,
+            draw=4,
+            start=10,
+            length=10,
+            filter_func=filter_func,
+            search="Micro"
+        )
+
+        # Act
+        response = client.get(test_url, format="json")
+
+        # Assert
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response["Content-Type"], "application/json")
+        del response.data["job_applications"].serializer
+        response.data["job_applications"] = list(response.data["job_applications"])
+        self.assertEqual(response.data, expected_data)
+
+    def test_get_list_with_search_query_data_returns_correct_data2(self):
+        # Arrange
+        client, expected_data, test_url = self.get_test_arrangement(
+            user=self.test_user_3,
+            draw=5,
+            start=0,
+            length=25,
+            order=[
+                SortingCriteria(1, "desc", "id"),
+                SortingCriteria(4, "desc", "title"),
+                SortingCriteria(2, "desc", "when"),
+            ],
+            order_by=["-id", "-title", "-when"]
+        )
+
+        # Act
+        response = client.get(test_url, format="json")
+
+        # Assert
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response["Content-Type"], "application/json")
         del response.data["job_applications"].serializer
@@ -215,3 +282,6 @@ class AuthenticatedUserApplicationApiTests(BaseAuthenticatedUserApplicationApi):
 
         # Assert
         self.assertEqual(response.status_code, 405)
+
+        # print(f"expected_data = {json.dumps(expected_data, indent=4)}")
+        # print(f"response_data = {json.dumps(response.data, indent=4)}")

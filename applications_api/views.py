@@ -1,12 +1,13 @@
+from datetime import date
 from typing import List, Optional
 
 from django.db.models.query import QuerySet
+from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status, generics
+
 from applications.models import JobApplication
 from applications_api.serializers import JobApplicationSerializer
-from datetime import date
 
 
 class JobApplications(generics.GenericAPIView):
@@ -76,7 +77,10 @@ class JobApplications(generics.GenericAPIView):
             }
         )
 
-    def post(self, request):
+    def post(self, request):  # pragma: no cover
+        """
+        This method is currently not used, and is blocked from being run by the http_method_names property.
+        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.validated_data['when'] = date.today()
@@ -98,7 +102,10 @@ class JobApplications(generics.GenericAPIView):
             )
 
 
-class JobApplicationDetail(generics.GenericAPIView):
+class JobApplicationDetail(generics.GenericAPIView):  # pragma: no cover
+    """
+    This class is currently not used
+    """
     serializer_class = JobApplicationSerializer
     queryset = JobApplication.objects.all()
     permission_classes = [IsAuthenticated]
