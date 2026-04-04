@@ -37,6 +37,10 @@ class BaseAuthenticatedUserMixin:
         "core/tests",
         settings.BASE_DIR,
     ]
+    test_user_1: AbstractBaseUser
+    test_user_2: AbstractBaseUser
+    test_user_3: AbstractBaseUser
+    test_user_4: AbstractBaseUser
 
     def __init_subclass__(cls, **kwargs):
         """
