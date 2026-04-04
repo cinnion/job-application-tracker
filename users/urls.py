@@ -14,4 +14,5 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("password_reset/done/", AdminViews.PasswordResetDoneView.as_view(), name="password_reset_done"),
     path("reset/<uidb64>/<token>/", AdminViews.PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
     path("reset/done/", AdminViews.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
+    path("profile/edit/", views.EditProfileView.as_view(), name="profile")
 ]

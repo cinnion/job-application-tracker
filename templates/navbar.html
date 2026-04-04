@@ -16,7 +16,8 @@
                         {% if user.is_staff %}
                             <li><a class="dropdown-item" href="{% url "admin:index" %}">Admin</a></li>
                         {% endif %}
-                        {% if perms.users.can_change_password %}
+                        <li><a class="dropdown-item" href="{% url "profile" %}">Edit Profile</a></li>
+                        {% if perms.users.change_user_password %}
                             <li><a class="dropdown-item" href="{% url "password_change" %}">Change password</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" href="#" onclick="window.submitLogoutForm(event);">Log out</a></li>
