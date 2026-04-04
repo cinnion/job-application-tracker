@@ -66,6 +66,7 @@ dev = [
     "django-upgrade==1.30.0",                                   # Upgrade tool
     "flake8==7.3.0",                                            # Coding style
     "pipdeptree==2.32.0",                                       # To see dependency tree
+    "unittest-parametrize==1.8.0",                              # To give us parameterized unit tests in unittest.
 ]
 remotedebug = [
     "pydevd-pycharm==251.26094.141"
