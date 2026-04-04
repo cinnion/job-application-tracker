@@ -1,5 +1,19 @@
 [
 {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "users",
+        "permissions": [
+            [
+                "change_user_password",
+                "users",
+                "user"
+            ]
+        ]
+    }
+},
+{
     "model": "users.user",
     "pk": 1,
     "fields": {
@@ -15,7 +29,9 @@
         "date_joined": "2026-04-02T08:11:47.456Z",
         "prefix": "",
         "middle_name": "",
-        "suffix": ""
+        "suffix": "",
+        "groups": [],
+        "user_permissions": []
     }
 },
 {
@@ -29,12 +45,14 @@
         "first_name": "",
         "last_name": "",
         "email": "testuser2@example.com",
-        "is_staff": false,
+        "is_staff": true,
         "is_active": true,
-        "date_joined": "2026-04-02T08:11:47.462Z",
+        "date_joined": "2026-04-02T08:11:47Z",
         "prefix": "",
         "middle_name": "",
-        "suffix": ""
+        "suffix": "",
+        "groups": [],
+        "user_permissions": []
     }
 },
 {
@@ -47,13 +65,19 @@
         "username": "testuser3",
         "first_name": "",
         "last_name": "",
-        "email": "testuser3",
+        "email": "testuser3@example.com",
         "is_staff": false,
         "is_active": true,
-        "date_joined": "2026-04-02T08:11:47.464Z",
+        "date_joined": "2026-04-02T08:11:47Z",
         "prefix": "",
         "middle_name": "",
-        "suffix": ""
+        "suffix": "",
+        "groups": [
+            [
+                "users"
+            ]
+        ],
+        "user_permissions": []
     }
 },
 {
@@ -69,10 +93,16 @@
         "email": "testuser4@example.com",
         "is_staff": false,
         "is_active": true,
-        "date_joined": "2026-04-02T08:11:47.466Z",
+        "date_joined": "2026-04-02T08:11:47Z",
         "prefix": "",
         "middle_name": "",
-        "suffix": ""
+        "suffix": "",
+        "groups": [
+            [
+                "users"
+            ]
+        ],
+        "user_permissions": []
     }
 }
 ]
