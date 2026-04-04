@@ -1,13 +1,13 @@
 """
 These are tests which deal with authenticated user requests for the URLs associated with this package.
 """
-
 import json
 import os
 import time
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.core.management import CommandParser
 from django.db.models import QuerySet
 from django.urls import reverse
 from rest_framework import status
@@ -25,6 +25,26 @@ class BaseAuthenticatedUserJobApplicationsApi(APITestCase):
     test_user_1: AbstractBaseUser
     test_user_2: AbstractBaseUser
     test_user_3: AbstractBaseUser
+    verbosity: int = 0
+
+    @classmethod
+    def setup_verbosity(cls):
+        """
+        Set our verbosity attribute so that we can conditionally output certain bits of information based on the
+        verbosity the test is being run.
+        """
+        parser = CommandParser(exit_on_error=False)
+
+        parser.add_argument(
+            "-v",
+            "--verbosity",
+            action="store",
+            default=1,
+            type=int,
+            choices=[0, 1, 2, 3],
+        )
+
+        parser.parse_known_args(namespace=cls)
 
     @classmethod
     def loadFixtureData(cls, model_class: type[M], datafile: str) -> list[M]:
@@ -61,6 +81,9 @@ class BaseAuthenticatedUserJobApplicationsApi(APITestCase):
         """
         super().setUpTestData()
 
+        # Set our verbosity value.
+        cls.setup_verbosity()
+
         start = time.perf_counter_ns()
 
         # Get our user model
@@ -77,8 +100,9 @@ class BaseAuthenticatedUserJobApplicationsApi(APITestCase):
         records = cls.loadFixtureData(JobApplication, "fixtures/job_applications.json")
 
         end = time.perf_counter_ns()
-        print(
-            f"Data has been loaded - it took {(end - start) / 1_000_000_000} seconds to load {len(users)} users and {len(records)} job applications.")
+        if cls.verbosity >= 2:
+            print(
+                f"Data has been loaded - it took {(end - start) / 1_000_000_000} seconds to load {len(users)} users and {len(records)} job applications.")
 
     def setUp(self):
         """

@@ -23,7 +23,6 @@ class JobApplicationTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        print("Setting up test users")
         user_model = get_user_model()
 
         cls.test_user_1 = user_model.objects.create(
