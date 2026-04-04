@@ -3,6 +3,20 @@
     "model": "auth.group",
     "pk": 1,
     "fields": {
+        "name": "staff",
+        "permissions": [
+            [
+                "change_user_password",
+                "users",
+                "user"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
         "name": "users",
         "permissions": [
             [
@@ -21,8 +35,8 @@
         "last_login": null,
         "is_superuser": true,
         "username": "testuser1",
-        "first_name": "",
-        "last_name": "",
+        "first_name": "Test 1",
+        "last_name": "User",
         "email": "testuser1@example.com",
         "is_staff": true,
         "is_active": true,
@@ -42,8 +56,8 @@
         "last_login": null,
         "is_superuser": false,
         "username": "testuser2",
-        "first_name": "",
-        "last_name": "",
+        "first_name": "Test 2",
+        "last_name": "User",
         "email": "testuser2@example.com",
         "is_staff": true,
         "is_active": true,
@@ -51,7 +65,11 @@
         "prefix": "",
         "middle_name": "",
         "suffix": "",
-        "groups": [],
+        "groups": [
+            [
+                "staff"
+            ]
+        ],
         "user_permissions": []
     }
 },
@@ -63,8 +81,8 @@
         "last_login": null,
         "is_superuser": false,
         "username": "testuser3",
-        "first_name": "",
-        "last_name": "",
+        "first_name": "Test 3",
+        "last_name": "User",
         "email": "testuser3@example.com",
         "is_staff": false,
         "is_active": true,
@@ -88,8 +106,8 @@
         "last_login": null,
         "is_superuser": false,
         "username": "testuser4",
-        "first_name": "",
-        "last_name": "",
+        "first_name": "Test 4",
+        "last_name": "User",
         "email": "testuser4@example.com",
         "is_staff": false,
         "is_active": true,
@@ -97,11 +115,7 @@
         "prefix": "",
         "middle_name": "",
         "suffix": "",
-        "groups": [
-            [
-                "users"
-            ]
-        ],
+        "groups": [],
         "user_permissions": []
     }
 }
