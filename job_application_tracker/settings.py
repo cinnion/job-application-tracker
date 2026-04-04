@@ -16,8 +16,6 @@ from pathlib import Path
 import environ
 import os
 
-from django.urls import reverse_lazy
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -200,11 +198,11 @@ SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = 'login'
 
-LOGOUT_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = 'home'
 
-LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGIN_REDIRECT_URL = 'home'
 
 
 # Password validation
