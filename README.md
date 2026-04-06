@@ -1,3 +1,5 @@
+[![Build Status](http://www.ka8zrt.com:6963/job/job-application-tracker/badge/icon)](http://www.ka8zrt.com:6963/job/job-application-tracker/)
+
 # job-application-tracker
 An application for tracking job applications
 
