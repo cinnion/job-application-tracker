@@ -1,3 +1,23 @@
+def buildBadge = addEmbeddableBadgeConfiguration(id: "buildBadge", subject: "Builds")
+def testsBadge = addEmbeddableBadgeConfiguration(id: "testBadge", subject: "Tests/Coverage")
+
+def RunBuild() {
+    sh "docker compose -p job-application-tracker build"
+}
+
+def RunTests() {
+    withCredentials([
+        file(
+            credentialsId: 'job-application-tracker-env',
+            variable: 'credvar')
+    ]) {
+        sh 'rm -f .env'
+        sh 'cp "\$credvar" .env'
+        sh "docker compose -p job-application-tracker --profile testing build tester"
+        sh "docker compose up tester"
+    }
+}
+
 pipeline {
     agent any
     environment {
@@ -75,21 +95,33 @@ pipeline {
             parallel {
                 stage("Build production") {
                     steps {
-                        sh "docker compose -p job-application-tracker build"
+                        script {
+                            buildBadge.setStatus("running")
+                            try {
+                                RunBuild()
+                                buildBadge.setStatus("passing")
+                            } catch (Exception err) {
+                                buildBadge.setStatus("Failing")
+                                echo "Build failed: ${e.toString()}"
+                                echo "Detailed message: ${e.getMessage()}"
+                                error "Ending build"
+                            }
+                        }
                     }
                 }
 
                 stage("Test") {
                     steps {
-                        withCredentials([
-                            file(
-                                credentialsId: 'job-application-tracker-env',
-                                variable: 'credvar')
-                        ]) {
-                            sh 'rm -f .env'
-                            sh 'cp "\$credvar" .env'
-                            sh "docker compose -p job-application-tracker --profile testing build tester"
-                            sh "docker compose up tester"
+                        script {
+                            testsBadge.setStatus("running")
+                            try {
+                                RunBuild()
+                            } catch (Exception err) {
+                                testsBadge.setStatus("Failing")
+                                echo "Tests failed: ${e.toString()}"
+                                echo "Detailed message: ${e.getMessage()}"
+                                error "Ending tests"
+                            }
                         }
                     }
                 }
@@ -103,6 +135,11 @@ pipeline {
                            rsync -az --delete htmlcov/ root@beta:/var/www/coverage/job-application-tracker/
                            ssh root@beta 'chown -R apache:apache /var/www/coverage/job-application-tracker'
                        '''
+                }
+            }
+            post {
+                cleanup {
+                    sh "sudo rm -rf htmlcov"
                 }
             }
         }
@@ -126,7 +163,24 @@ pipeline {
                     ]
                 )
             }
-        }
+            post {
+                failure {
+                    script {
+                        testsBadge.setStatus("Failing")
+                    }
+                }
+                unstable {
+                    script {
+                        testsBadge.setStatus("Unstable")
+                    }
+                }
+                success {
+                    script {
+                        testsBadge.setStatus("Passing")
+                    }
+                }
+            }
+        } 
 
 
         stage('Deploy to internal') {
@@ -160,3 +214,6 @@ pipeline {
 
     }
 }
+// Local Variables:
+// eval: (auto-fill-mode -1)
+// End:
