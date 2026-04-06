@@ -11,10 +11,17 @@ def RunTests() {
             credentialsId: 'job-application-tracker-env',
             variable: 'credvar')
     ]) {
-        sh 'rm -f .env'
-        sh 'cp "\$credvar" .env'
-        sh "docker compose -p job-application-tracker --profile testing build tester"
-        sh "docker compose up tester"
+        sh """
+               rm -f .env
+               cp "\${credvar}" .env
+               docker compose -p job-application-tracker --profile testing build tester
+               docker compose up tester
+               CONTAINER_ID=\$(docker compose ps -qa tester)
+               echo "Exit status was \$(docker inspect \${CONTAINER_ID} --format='{{.State.ExitCode}}')"
+               docker cp \${CONTAINER_ID}:/usr/src/app/.coverage .coverage
+               docker cp \${CONTAINER_ID}:/usr/src/app/coverage.xml coverage.xml
+               docker cp \${CONTAINER_ID}:/usr/src/app/htmlcov htmlcov
+           """
     }
 }
 
@@ -27,6 +34,12 @@ pipeline {
         DOCKER_NODE = "docker"
     }
     stages {
+        stage('Checkout') {
+            steps {
+                // Explicitly check out the branch that triggered the build, so that when branch conditions work.
+                sh "git checkout -b ${GIT_BRANCH} remotes/origin/${GIT_BRANCH} || git checkout ${GIT_BRANCH}"
+            }
+        }
         stage('Get Tag Name') {
             steps {
                 script {
@@ -212,6 +225,13 @@ pipeline {
             }
         }
 
+    }
+    post {
+        cleanup {
+            sh "docker system prune -f"
+            sh "docker container prune -f"
+            sh "docker image prune -a -f"
+        }
     }
 }
 // Local Variables:
