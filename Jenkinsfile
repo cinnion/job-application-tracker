@@ -98,7 +98,7 @@ pipeline {
                         script {
                             buildBadge.setStatus("running")
                             try {
-                                RunBuild()
+                                RunTests()
                                 buildBadge.setStatus("passing")
                             } catch (Exception err) {
                                 buildBadge.setStatus("Failing")
