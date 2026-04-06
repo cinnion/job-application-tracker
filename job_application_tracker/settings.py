@@ -306,11 +306,18 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 ##################
 # webpack_loader #
 ##################
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-stats.json'),
-    },
-    'APPLICATION_DETAILS': {
-        'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-application-details-stats.json'),
-    },
-}
+if DJANGO_ENV != 'testing':
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-stats.json'),
+        },
+        'APPLICATION_DETAILS': {
+            'STATS_FILE': os.path.join(STATIC_URL, 'webpack_bundles/webpack-application-details-stats.json'),
+        },
+    }
+else:
+    WEBPACK_LOADER = {
+        'DEFAULT': {
+            'LOADER_CLASS': 'webpack_loader.loaders.FakeWebpackLoader',
+        }
+    }

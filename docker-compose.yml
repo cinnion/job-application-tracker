@@ -2,13 +2,13 @@ services:
   py-wsgi:
     build:
       context: .
-      dockerfile: ./docker/py-wsgi/Dockerfile.prod
+      dockerfile: ./docker/py-wsgi/Dockerfile
       tags:
         - ${REGISTRY}/job-application-tracker-py-wsgi:${TAG}
         - ${REGISTRY}/job-application-tracker-py-wsgi:latest
       target: production
     image: ${REGISTRY}/job-application-tracker-py-wsgi
-    command: gunicorn job-application-tracker.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn job_application_tracker.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/var/www/job-application-tracker/web/staticfiles
       - media_volume:/var/www/job-application-tracker/web/mediafiles
@@ -50,6 +50,22 @@ services:
         constraints:
           - node.hostname == ${DOCKER_NODE}
 
+#### BUILD ONLY START ####
+
+  tester:
+    build:
+      context: .
+      dockerfile: ./docker/py-wsgi/Dockerfile
+      tags:
+        - job-application-tracker-tester
+      target: tester
+    image: job-application-tracker-tester
+    profiles: [testing]
+    command: /bin/sh -c "coverage run ./manage.py test && coverage combine && coverage report && coverage html && coverage xml"
+    volumes:
+      - .:/usr/src/app
+
+#### BUILD ONLY END ####
 
 volumes:
   static_volume:

@@ -49,8 +49,8 @@ pipeline {
         stage('Resolve docker-compose file') {
             steps {
                 script {
-                    // Read the docker-compose-prod file
-                    def template = readFile 'docker-compose-prod.yml'
+                    // Read the docker-compose file after cutting out the BUILD ONLY block
+                    def template = sh(script: "sed '/#### BUILD ONLY START ####/,/#### BUILD ONLY END ####/d' < docker-compose.yml", returnStdout: true)
 
                     // Replace the variables for interior production
                     def resolvedContentInternal = template.replaceAll(/\$\{REGISTRY\}/, env.REGISTRY)
@@ -71,9 +71,39 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage("Build and test in parallel") {
+            parallel {
+                stage("Build production") {
+                    steps {
+                        sh "docker compose -p job-application-tracker build"
+                    }
+                }
+
+                stage("Test") {
+                    steps {
+                        withCredentials([
+                            file(
+                                credentialsId: 'job-application-tracker-env',
+                                variable: 'credvar')
+                        ]) {
+                            sh 'rm -f .env'
+                            sh 'cp "\$credvar" .env'
+                            sh "docker compose -p job-application-tracker --profile testing build tester"
+                            sh "docker compose up tester"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Push coverage report") {
             steps {
-                sh 'docker compose -f docker-compose-prod.yml -p job-application-tracker build'
+                sshagent(credentials: ['jenkins-ssh']) {
+                    sh '''
+                           rsync -az --delete htmlcov/ root@beta:/var/www/coverage/job-application-tracker/
+                           ssh root@beta 'chown -R apache:apache /var/www/coverage/job-application-tracker'
+                       '''
+                }
             }
         }
 
@@ -86,18 +116,47 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Record Coverage') {
+            steps {
+                recordCoverage(
+                    tools: [[parser: 'COBERTURA', pattern: 'coverage.xml']],
+                    sourceCodeRetention: 'EVERY_BUILD', // Options: NEVER, LAST_BUILD, EVERY_BUILD
+                    qualityGates: [
+                        [threshold: 60.0, metric: 'LINE', baseline: 'PROJECT', criticality: 'UNSTABLE']  // Fails build if <60%
+                    ]
+                )
+            }
+        }
+
+
+        stage('Deploy to internal') {
+            when {
+                not { branch 'main' }
+            }
             steps {
                 sshagent(credentials: ['jenkins-ssh']) {
                     sh '''
-                        scp -p job-application-tracker-docker.yml root@docker:~/docker-compose/job-application-tracker.yml
-                        ssh root@docker 'docker stack deploy --detach -c ~/docker-compose/job-application-tracker.yml job-application-tracker'
+                           scp -p job-application-tracker-docker.yml root@docker:~/docker-compose/job-application-tracker.yml
+                           ssh root@docker 'docker stack deploy --detach -c ~/docker-compose/job-application-tracker.yml job-application-tracker'
+                       '''
+                }
+            }
+        }
 
+
+        stage('Deploy to production (beta)') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sshagent(credentials: ['jenkins-ssh']) {
+                    sh '''
                         scp -p job-application-tracker-beta.yml root@beta:~/docker-compose/job-application-tracker.yml
                         ssh root@beta 'docker stack deploy --detach -c ~/docker-compose/job-application-tracker.yml job-application-tracker'
                     '''
                 }
             }
         }
+
     }
 }
