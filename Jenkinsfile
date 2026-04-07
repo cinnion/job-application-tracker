@@ -1,5 +1,24 @@
-def buildBadge = addEmbeddableBadgeConfiguration(id: "buildBadge", subject: "Builds")
-def testsBadge = addEmbeddableBadgeConfiguration(id: "testBadge", subject: "Tests/Coverage")
+@Library('python-coverage-library')
+import org.ka8zrt.ReportCoverage
+
+def buildBadge = addEmbeddableBadgeConfiguration(id: "buildBadge",
+                                                 subject: "Builds",
+                                                 link: "https://www.ka8zrt.com"
+                                                )
+def testsBadge = addEmbeddableBadgeConfiguration(id: "testBadge",
+                                                 subject: "Tests",
+                                                 status: "Status",
+                                                 color: "blue",
+                                                 animatedOverlayColor: "green",
+                                                 link: "https://www.ka8zrt.com"
+                                                )
+def coverageBadge = addEmbeddableBadgeConfiguration(id: "coverageBadge",
+                                                    subject: "Coverage",
+                                                    status: "Status",
+                                                    color: "blue",
+                                                    animatedOverlayColor: "green",
+                                                    link: "https://www.ka8zrt.com"
+                                                   )
 
 def RunBuild() {
     sh "docker compose -p job-application-tracker build"
@@ -175,6 +194,9 @@ pipeline {
                         [threshold: 60.0, metric: 'LINE', baseline: 'PROJECT', criticality: 'UNSTABLE']  // Fails build if <60%
                     ]
                 )
+                script {
+                    ReportCoverage.reportCoveragePercent(coverageBadge)
+                }
             }
             post {
                 failure {
@@ -193,8 +215,7 @@ pipeline {
                     }
                 }
             }
-        } 
-
+        }
 
         stage('Deploy to internal') {
             when {
@@ -209,7 +230,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Deploy to production (beta)') {
             when {

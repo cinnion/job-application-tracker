@@ -1,4 +1,6 @@
-[![Build Status](http://www.ka8zrt.com:6963/job/job-application-tracker/badge/icon)](http://www.ka8zrt.com:6963/job/job-application-tracker/)
+[![Build Status](https://www.ka8zrt.com:6963/buildStatus/icon?job=job-application-tracker&config=buildBadge)](https://www.ka8zrt.com/)
+[![Testing Status](https://www.ka8zrt.com:6963/buildStatus/icon?job=job-application-tracker&config=testBadge)](https://www.ka8zrt.com/)
+[![Coverage Status](https://www.ka8zrt.com:6963/buildStatus/icon?job=job-application-tracker&config=coverageBadge)](https://www.ka8zrt.com/)
 
 # job-application-tracker
 An application for tracking job applications

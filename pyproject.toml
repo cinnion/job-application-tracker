@@ -126,6 +126,10 @@ extend-ignore = [
     "E501",                     # Line too long
 ]
 
+[tool.ReportCoverage]
+fail_under = 60
+warn_under = 70
+
 [tool.setuptools]
 py-modules = [
     "applications",
