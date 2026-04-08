@@ -1,4 +1,4 @@
-@Library('python-coverage-library')
+@Library('python-coverage-library') _
 import org.ka8zrt.ReportCoverage
 
 def buildBadge = addEmbeddableBadgeConfiguration(id: "buildBadge",
@@ -20,29 +20,10 @@ def coverageBadge = addEmbeddableBadgeConfiguration(id: "coverageBadge",
                                                     link: "https://www.ka8zrt.com"
                                                    )
 
-def RunBuild() {
-    sh "docker compose -p job-application-tracker build"
-}
-
-def RunTests() {
-    withCredentials([
-        file(
-            credentialsId: 'job-application-tracker-env',
-            variable: 'credvar')
-    ]) {
-        sh """
-               rm -f .env
-               cp "\${credvar}" .env
-               docker compose -p job-application-tracker --profile testing build tester
-               docker compose up tester
-               CONTAINER_ID=\$(docker compose ps -qa tester)
-               echo "Exit status was \$(docker inspect \${CONTAINER_ID} --format='{{.State.ExitCode}}')"
-               docker cp \${CONTAINER_ID}:/usr/src/app/.coverage .coverage
-               docker cp \${CONTAINER_ID}:/usr/src/app/coverage.xml coverage.xml
-               docker cp \${CONTAINER_ID}:/usr/src/app/htmlcov htmlcov
-           """
-    }
-}
+def project_config = [
+    "project_name": "job-application-tracker",
+    "project_env": "job-application-tracker-env"
+]
 
 pipeline {
     agent any
@@ -130,7 +111,7 @@ pipeline {
                         script {
                             buildBadge.setStatus("running")
                             try {
-                                RunTests()
+                                runTestsWithCoverage(project_config)
                                 buildBadge.setStatus("passing")
                             } catch (Exception err) {
                                 buildBadge.setStatus("Failing")
@@ -147,7 +128,7 @@ pipeline {
                         script {
                             testsBadge.setStatus("running")
                             try {
-                                RunBuild()
+                                runBuild(project_config)
                             } catch (Exception err) {
                                 testsBadge.setStatus("Failing")
                                 echo "Tests failed: ${e.toString()}"
@@ -195,7 +176,7 @@ pipeline {
                     ]
                 )
                 script {
-                    ReportCoverage.reportCoveragePercent(coverageBadge)
+                    reportCoveragePercent(coverageBadge)
                 }
             }
             post {
