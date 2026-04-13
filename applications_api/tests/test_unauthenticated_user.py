@@ -1,3 +1,6 @@
+"""
+The tests for the DRF API for job applications involving unauthenticated users.
+"""
 import unittest
 
 from django.urls import reverse
@@ -8,6 +11,9 @@ from rest_framework.test import APITestCase
 
 # noinspection DuplicatedCode - These tests are near duplicates of one another, but test different endpoints.
 class UnauthenticatedApplicationTests(APITestCase):
+    """
+    The unauthenticated user tests for the DRF API for job applications.
+    """
     def setUp(self):
         """
         Create our client for use by the tests.

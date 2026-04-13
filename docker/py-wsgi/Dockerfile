@@ -83,7 +83,7 @@ RUN pip install '.[dev]'
 #
 # Run pylint
 #
-RUN pylint --disable=fixme .
+RUN pylint --disable=fixme $(git ls-files '*.py')
 
 ##############
 # Production #

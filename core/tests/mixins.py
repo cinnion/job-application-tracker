@@ -21,6 +21,9 @@ from django.urls import reverse
 
 # Define a named tuple for sorting criteria
 class SortingCriteria(NamedTuple):
+    """
+    A class for holding sorting criteria for use by a DataTable test.
+    """
     column: int
     ascdesc: str
     name: str
@@ -81,7 +84,7 @@ class BaseAuthenticatedUserMixin:
         parser.parse_known_args(namespace=cls)
 
     @classmethod
-    def loadFixtureData(cls, datafile: str) -> int:
+    def loadFixtureData(cls, datafile: str) -> int:  # pylint: disable=invalid-name
         """
         Load the data from a fixture data file, bulk insert, and return the resulting objects. It is assumed the
         data file consists of only a single type of data, which is why we injected the user.json file into the fixtures
@@ -108,7 +111,7 @@ class BaseAuthenticatedUserMixin:
         for directory in cls.fixture_search_dirs:
             file_path = Path(directory) / datafile
             if file_path.exists() and file_path.is_file():
-                with open(file_path, "r") as file:
+                with open(file_path, "r", encoding="utf-8") as file:
                     raw_data = file.read()
                 break
         else:
@@ -138,7 +141,7 @@ class BaseAuthenticatedUserMixin:
         return len(records)
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(cls):  # pylint: disable=invalid-name
         """
         Create our test users and load our test data
 
@@ -174,7 +177,7 @@ class BaseAuthenticatedUserMixin:
             )
 
     # noinspection PyUnresolvedReferences
-    def setUp(self: SimpleTestCase):
+    def setUp(self: SimpleTestCase):  # pylint: disable=invalid-name
         """
         Create our authenticated client for use by the individual tests.
 
@@ -184,6 +187,9 @@ class BaseAuthenticatedUserMixin:
 
 
 class DataTableColumn(NamedTuple):
+    """
+    A tuple for holding a DataTable column for creating test data for our tests.
+    """
     data: str
     name: str
     searchable: bool

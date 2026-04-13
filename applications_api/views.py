@@ -1,9 +1,13 @@
+"""
+Views for the DRF API for job applications.
+"""
 from datetime import date
 from typing import List, Optional
 
 from django.db.models.query import QuerySet
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from applications.models import JobApplication
@@ -11,6 +15,9 @@ from applications_api.serializers import JobApplicationSerializer
 
 
 class JobApplications(generics.GenericAPIView):
+    """
+    The view for job applications presented through the DRF API.
+    """
     serializer_class = JobApplicationSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ['get']
@@ -22,7 +29,8 @@ class JobApplications(generics.GenericAPIView):
         user_id = self.request.user.id
         return JobApplication.objects.filter(user_id=user_id)
 
-    def get_sort(self, request) -> Optional[List[str]]:
+    @staticmethod
+    def get_sort(request: Request) -> Optional[List[str]]:
         """
         Parse the request to get the ordering information and return it in a Django compliant list.
         The method returns None if there is no sorting requested.
@@ -32,22 +40,31 @@ class JobApplications(generics.GenericAPIView):
         """
         sort_order = []
         i = 0
-        name = request.GET.get("order[%i][name]" % i)
+        name = request.GET.get(f"order[{i}][name]")
         while name is not None:
-            direction = request.GET.get("order[%i][dir]" % i)
+            direction = request.GET.get(f"order[{i}][dir]")
             if direction == 'desc':
                 sort_order.append('-' + name)
             else:
                 sort_order.append(name)
             i += 1
-            name = request.GET.get("order[%i][name]" % i)
+            name = request.GET.get(f"order[{i}][name]")
 
         if len(sort_order) == 0:
             sort_order = None
 
         return sort_order
 
-    def get(self, request):
+    def get(self, request: Request) -> Response:
+        """
+        Our GET request handler for the API.
+
+        Args:
+            request (Request): The API request.
+
+        Returns:
+
+        """
         draw = int(request.GET.get("draw", 1))
         start_num = int(request.GET.get("start", 0))
         length = int(request.GET.get("length", 10))
@@ -77,7 +94,7 @@ class JobApplications(generics.GenericAPIView):
             }
         )
 
-    def post(self, request):  # pragma: no cover
+    def post(self, request: Request) -> Response:  # pragma: no cover
         """
         This method is currently not used, and is blocked from being run by the http_method_names property.
         """
@@ -92,14 +109,14 @@ class JobApplications(generics.GenericAPIView):
                 },
                 status=status.HTTP_201_CREATED,
             )
-        else:
-            return Response(
-                {
-                    "status": "fail",
-                    "message": serializer.errors,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+
+        return Response(
+            {
+                "status": "fail",
+                "message": serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class JobApplicationDetail(generics.GenericAPIView):  # pragma: no cover
@@ -110,13 +127,36 @@ class JobApplicationDetail(generics.GenericAPIView):  # pragma: no cover
     queryset = JobApplication.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def get_application(self, pk):
+    @staticmethod
+    def get_application(pk: int) -> JobApplication | None:
+        """
+        A common method to get a job application by its primary key.
+
+        Args:
+            pk (int): The primary key
+
+        Returns:
+            A Response object containing the job application.
+
+        """
+        # noinspection PyBroadException
         try:
             return JobApplication.objects.get(pk=pk)
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
             return None
 
-    def get(self, request, pk):
+    def get(self, request: Request, pk: int) -> Response:
+        """
+        A HTTP get handler to get a job application.
+
+        Args:
+            request (Request): Our request
+            pk (int): The primary key
+
+        Returns:
+            The response object.
+
+        """
         job_application = self.get_application(pk=pk)
         if job_application is None:
             return Response(
@@ -135,7 +175,18 @@ class JobApplicationDetail(generics.GenericAPIView):  # pragma: no cover
             }
         )
 
-    def patch(self, request, pk):
+    def patch(self, request: Request, pk: int) -> Response:
+        """
+        The HTTP PATCH request handler.
+
+        Args:
+            request (Request): The request object.
+            pk (int): The primary key.
+
+        Returns:
+            The response object.
+
+        """
         job_application = self.get_application(pk=pk)
         if job_application is None:
             return Response(
@@ -155,16 +206,27 @@ class JobApplicationDetail(generics.GenericAPIView):  # pragma: no cover
                     "job_application": serializer.data,
                 },
             )
-        else:
-            return Response(
-                {
-                    "status": "fail",
-                    "message": serializer.errors,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
-    def delete(self, request, pk):
+        return Response(
+            {
+                "status": "fail",
+                "message": serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    def delete(self, request: Request, pk: int) -> Response:
+        """
+        The HTTP delete method handler.
+
+        Args:
+            request (Request): The request object.
+            pk (int): The primary key.
+
+        Returns:
+            The reponse object.
+
+        """
         job_application = self.get_application(pk=pk)
         if job_application is None:
             return Response(

@@ -1,3 +1,6 @@
+"""
+The URLs for dealing with job applications, from the API side of things.
+"""
 from typing import List, Union
 
 from django.urls import path, URLResolver, URLPattern

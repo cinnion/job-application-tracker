@@ -1,7 +1,6 @@
 """
 These are tests which deal with authenticated user requests for the URLs associated with this package.
 """
-
 from django.db.models import QuerySet
 from django.urls import reverse
 from rest_framework import status
@@ -18,6 +17,9 @@ from core.tests.mixins import (
 
 # noinspection DuplicatedCode
 class AuthenticatedUserJobApplicationsApiTests(BaseAuthenticatedUserMixin, APITestCase, DataTableTestMixin):
+    """
+    Tests for the job applications API for authenticated users.
+    """
     api_url = "applications-api:applications-list"
     deferred_fixtures = ["fixtures/job_applications.json"]
 
@@ -201,7 +203,7 @@ class AuthenticatedUserJobApplicationsApiTests(BaseAuthenticatedUserMixin, APITe
         response = self.client.head(self.test_url)
 
         # Assert
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)  # pylint: disable=no-member
 
     def test_list_options_request_gets_an_error(self):
         # Arrange
