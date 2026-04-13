@@ -76,6 +76,11 @@ FROM builder AS tester
 WORKDIR /usr/src/app
 
 #
+# Install git, so we can get the list of files.
+#
+RUN apk add git
+
+#
 # Install development requirements
 #
 RUN pip install '.[dev]'
