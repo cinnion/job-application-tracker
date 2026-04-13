@@ -10,7 +10,7 @@ authors = [
 ]
 dependencies = [
     # Django
-    "Django==6.0.3",
+    "Django==6.0.4",
 
     # Advanced .env support
     "django-environ==0.13.0",
@@ -22,32 +22,32 @@ dependencies = [
     "django-password-validators==1.7.3",
 
     # Crispy Forms
-    "crispy-bootstrap5==2024.10",
-    "django-crispy-forms==2.3",
+    "crispy-bootstrap5==2026.3",
+    "django-crispy-forms==2.6",
 
     # For DataTable support
     "django-ajax-datatable==4.5.0",
-    "djangorestframework==3.15.2",
+    "djangorestframework==3.17.1",
 
     # For tweaking form widgets
     "django-widget-tweaks==1.5.1",
 
     # Google sheet access
-    "google-api-python-client==2.153.0",
-    "google-auth-oauthlib==1.2.1",
-    "google-cloud-api-keys==0.5.13",
+    "google-api-python-client==2.194.0",
+    "google-auth-oauthlib==1.3.1",
+    "google-cloud-api-keys==0.8.0",
 
     # Status proto mapping for gRPC
-    "grpcio-status==1.67.1",
+    "grpcio-status==1.80.0",
 
     # WSGI server
-    "gunicorn==23.0.0",
+    "gunicorn==25.3.0",
 
     # Database
     "psycopg[binary,pool]==3.3.3",
 
     # Type hints for Python 3.8+
-    "typing_extensions==4.12.2",
+    "typing_extensions==4.15.0",
 ]
 
 [project.urls]
@@ -60,18 +60,19 @@ manage = "job_application_tracker.manage:main"
 [project.optional-dependencies]
 dev = [
     "coverage==7.13.5",                                         # Coverage tool
-    "django-debug-toolbar==6.2.0",                              # Django Debug Toolbar
+    "django-debug-toolbar==6.3.0",                              # Django Debug Toolbar
     "django-extensions==4.1",                                   # Django extensions
     "django-upgrade==1.30.0",                                   # Upgrade tool
-    "pipdeptree==2.32.0",                                       # To see dependency tree
+    "djangorestframework-stubs==3.16.9",                        # DRF stubs for code insight.
+    "pipdeptree==2.35.1",                                       # To see dependency tree
     "pylint[spelling]==4.0.5",                                  # Lint
     "pylint-django==2.7.0",                                     # Lint extensions for django
     "pylint-per-file-ignores==3.2.1",                           # Lint - Add specific rule ignores based on the file.
     "unittest-parametrize==1.8.0",                              # To give us parameterized unit tests in unittest.
 ]
-remotedebug = [
-    "pydevd-pycharm==251.26094.141"
-]
+#remotedebug = [
+#    "pydevd-pycharm==261.22158.340"
+#]
 
 [tool.coverage.run]
 branch = true
@@ -146,8 +147,10 @@ per-file-ignores = [
     "*/urls.py:invalid-name",
     "*/views.py:too-many-ancestors",
     "applications/tests/test_authenticated_user.py:too-many-lines",
+    "core/tests/mixins.py:line-too-long,too-many-arguments,too-many-positional-arguments",
     "job_application_tracker/middleware.py:too-few-public-methods",
-    "job_application_tracker/settings.py:line-too-long,consider-using-f-string,invalid-name"
+    "job_application_tracker/settings.py:line-too-long,consider-using-f-string,invalid-name",
+    "users/views.py:duplicate-code"
 ]
 
 [tool.setuptools]
