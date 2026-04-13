@@ -1,3 +1,6 @@
+"""
+Our overridden user views.
+"""
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.views import (
     PasswordChangeView as AuthPasswordChangeView

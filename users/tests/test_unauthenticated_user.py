@@ -1,3 +1,7 @@
+"""
+Our class based tests for dealing with unauthenticated users trying to do user profile related
+actions.
+"""
 import unittest
 from urllib.parse import urlencode
 

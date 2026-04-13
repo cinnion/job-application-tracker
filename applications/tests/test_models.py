@@ -1,3 +1,7 @@
+"""
+Our class based tests for dealing with tests related directly to the JobApplication model and its
+verification methods.
+"""
 import datetime
 import unittest
 from unittest import mock
@@ -12,6 +16,9 @@ from applications.models import JobApplication
 
 
 class JobApplicationTestCase(TestCase):
+    """
+    Tests for the JobApplication class.
+    """
     test_user_1 = None
     test_user_2 = None
 
@@ -466,7 +473,7 @@ class JobApplicationTestCase(TestCase):
                 confirm="https://confirm.example.com",
                 notes="Some notes",
                 rejected="1999-12-31",
-                created_at=past_time.__str__()
+                created_at=str(past_time)
             )
 
         obj.refresh_from_db()
@@ -512,7 +519,7 @@ class JobApplicationTestCase(TestCase):
                 confirm="https://confirm.example.com",
                 notes="Some notes",
                 rejected="1999-12-31",
-                updated_at=past_time.__str__()
+                updated_at=str(past_time),
             )
 
         obj.refresh_from_db()
@@ -530,7 +537,7 @@ class JobApplicationTestCase(TestCase):
         )
 
         # Act
-        result = obj.__str__()
+        result = str(obj)
 
         # Assert
         self.assertEqual(result, "1999-12-31: Some title @ Some company")

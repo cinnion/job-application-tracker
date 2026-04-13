@@ -1,3 +1,6 @@
+"""
+The model for our job applications.
+"""
 from django.db import models
 from django.utils.timezone import localtime
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +12,9 @@ class JobApplication(models.Model):
     A database record for storing information about job applications.
     """
     class Meta:
+        """
+        Override our table name.
+        """
         db_table = "job_applications"
 
     id = models.BigAutoField(

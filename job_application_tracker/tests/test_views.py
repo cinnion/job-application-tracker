@@ -1,3 +1,6 @@
+"""
+Tests associated with our main project views (home/about).
+"""
 import json
 import os
 from os import unlink
@@ -10,6 +13,9 @@ from django.urls import reverse
 
 
 class TestAboutView(TestCase):
+    """
+    Tests surrounding our about page.
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -33,7 +39,7 @@ class TestAboutView(TestCase):
         )
 
     def write_build_info_file(self):
-        self.expected_build_info = {
+        self.expected_build_info = {  # pylint: disable=attribute-defined-outside-init
             "BUILD_NUMBER": "Some build number",
             "BUILD_ID": "Some build id",
             "JOB_NAME": "Some job name",
@@ -45,7 +51,7 @@ class TestAboutView(TestCase):
         }
 
         try:
-            with open(self.build_info_path, "w") as f:
+            with open(self.build_info_path, "w", encoding="utf-8") as f:
                 json.dump(self.expected_build_info, f)
         except PermissionError:
             print(f"Where were permission errors writing {"self.build_info_path"}."
@@ -96,10 +102,10 @@ class TestAboutView(TestCase):
 
     def test_junk_file_returns_na_with_error(self):
         # Arrange
-        with open(self.build_info_path, "w") as f:
+        with open(self.build_info_path, "w", encoding="utf-8") as f:
             f.write("This is some non-JSON garbage.\n")
         expected_build_info = {
-            "Error": "Could not decode JSON fron the file build_info.json.",
+            "Error": "Could not decode JSON from the file build_info.json.",
             "BUILD_NUMBER": "N/A",
             "BUILD_ID": "N/A",
             "JOB_NAME": "N/A",
@@ -131,6 +137,10 @@ class TestAboutView(TestCase):
 
 
 class TestHomeView(TestCase):
+    """
+    Tests associated with our home page.
+    """
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

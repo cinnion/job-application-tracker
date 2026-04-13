@@ -1,4 +1,8 @@
+"""
+Allow the Admin interface to be able to work with job applications.
+"""
 from django.contrib import admin
+
 from .models import JobApplication
 
 

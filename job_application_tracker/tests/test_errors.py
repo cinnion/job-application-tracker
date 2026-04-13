@@ -1,3 +1,6 @@
+"""
+Tests associated with our error pages.
+"""
 import unittest
 from unittest.mock import patch
 

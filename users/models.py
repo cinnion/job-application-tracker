@@ -1,10 +1,22 @@
+"""
+An extended User model, which adds additional fields for our user, and also implements
+a permission to prevent a user (primarily our demo user) from changing their password.
+"""
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
+    """
+    An extended User model, which adds additional fields for our user, as well as adding a
+    new permission, change_user_password, which is required to be able to change the password.
+    """
+
     class Meta:
+        """
+        Our class metadata, including the table comment and the new permission.
+        """
         db_table_comment = "The users for the site"
         permissions = [
             ("change_user_password", "Can change their user password"),

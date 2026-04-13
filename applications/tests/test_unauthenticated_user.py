@@ -1,3 +1,7 @@
+"""
+Test for verifying functionality surrounding an unauthenticated user trying to access
+job applications either as a list or individually.
+"""
 import unittest
 
 from django.test import TestCase, Client
@@ -5,6 +9,11 @@ from django.urls import reverse
 
 
 class UnauthenticatedApplicationTests(TestCase):
+    """
+    Our tests for verifying that unauthenticated users do not get access to job applications,
+    and either get redirected to the login page, or get the appropriate error for methods which
+    do not exist.
+    """
     def setUp(self):
         """
         Create our client for use by the tests.

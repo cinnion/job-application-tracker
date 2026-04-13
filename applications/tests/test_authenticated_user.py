@@ -1356,7 +1356,9 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
         # Assert
         self.assertEqual(response.status_code, 404)
         self.assertIn(
-            f"WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 (id={self.test_user_2.id}) on id={self.test_record.id}: No job application found matching the query",
+            "WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 "
+            f"(id={self.test_user_2.id}) on id={self.test_record.id}: "
+            "No job application found matching the query",
             cm.output
         )
 
@@ -1387,7 +1389,9 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
         # Assert
         self.assertEqual(response.status_code, 404)
         self.assertIn(
-            f"WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 (id={self.test_user_2.id}) on id={self.test_record.id}: No job application found matching the query",
+            "WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 "
+            f"(id={self.test_user_2.id}) on id={self.test_record.id}: "
+            "No job application found matching the query",
             cm.output
         )
         self.assert_record_unchanged()
@@ -1421,7 +1425,9 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
         # Assert
         self.assertEqual(response.status_code, 404)
         self.assertIn(
-            f"WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 (id={self.test_user_2.id}) on id={self.test_record.id}: No job application found matching the query",
+            "WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 "
+            f"(id={self.test_user_2.id}) on id={self.test_record.id}: "
+            "No job application found matching the query",
             cm.output
         )
         self.assert_record_unchanged()
@@ -1455,7 +1461,8 @@ class AuthenticatedUserEditApplicationDetailsTests(BaseAuthenticatedUserApplicat
         # Assert
         self.assertEqual(response.status_code, 404)
         self.assertIn(
-            f"WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 (id={self.test_user_2.id}) on id=99: No job application found matching the query",
+            "WARNING:applications.views:Http404 raised in ApplicationDetails by testuser2 "
+            f"(id={self.test_user_2.id}) on id=99: No job application found matching the query",
             cm.output
         )
         self.assert_record_unchanged()

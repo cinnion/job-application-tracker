@@ -1,3 +1,7 @@
+"""
+Our class based tests for dealing with tests related directly to the User model and its
+verification methods.
+"""
 import unittest
 
 from django.test import TestCase

@@ -1,3 +1,7 @@
+"""
+Our class based tests for dealing with authenticated users trying to do user profile related
+actions.
+"""
 import unittest
 from typing import cast
 
@@ -38,7 +42,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         """
         return {
             field.name: getattr(user, field.name)
-            for field in user._meta.get_fields()
+            for field in user._meta.get_fields()  # pylint: disable=protected-access
             if not field.is_relation
         }
 

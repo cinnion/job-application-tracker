@@ -1,3 +1,6 @@
+"""
+The custom context processors used by this project.
+"""
 from typing import Dict
 
 from django.conf import settings

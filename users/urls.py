@@ -1,9 +1,12 @@
+"""
+The URLs for dealing with user management and authentication, including login/logout, password
+change/reset, profile editing, etc.
+"""
 from typing import List, Union
 
 from django.contrib.auth import views as AdminViews
 from django.urls import path, URLResolver, URLPattern
 from . import views
-
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("login/", AdminViews.LoginView.as_view(), name="login"),

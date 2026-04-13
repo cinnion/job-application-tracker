@@ -1,3 +1,7 @@
+"""
+Our views related to job applications, both as a list and as the detailed form of an
+individual job application.
+"""
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Model
 from django.urls import reverse_lazy

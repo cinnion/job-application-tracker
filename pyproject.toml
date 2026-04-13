@@ -59,13 +59,14 @@ manage = "job_application_tracker.manage:main"
 
 [project.optional-dependencies]
 dev = [
-    "Flake8-pyproject==1.2.4",                                  # TOML support for flake8
     "coverage==7.13.5",                                         # Coverage tool
     "django-debug-toolbar==6.2.0",                              # Django Debug Toolbar
     "django-extensions==4.1",                                   # Django extensions
     "django-upgrade==1.30.0",                                   # Upgrade tool
-    "flake8==7.3.0",                                            # Coding style
     "pipdeptree==2.32.0",                                       # To see dependency tree
+    "pylint[spelling]==4.0.5",                                  # Lint
+    "pylint-django==2.7.0",                                     # Lint extensions for django
+    "pylint-per-file-ignores==3.2.1",                           # Lint - Add specific rule ignores based on the file.
     "unittest-parametrize==1.8.0",                              # To give us parameterized unit tests in unittest.
 ]
 remotedebug = [
@@ -114,21 +115,40 @@ title = "Job Application Tracker Test Coverage Report"          # Title for the 
 [tool.coverage.xml]
 output = "coverage.xml"
 
-[tool.flake8]
-max-line-length = 120
-exclude = [
-    ".git",
-    ".venv",
-    "__pycache__",
-    "node_modules"
-]
-extend-ignore = [
-    "E501",                     # Line too long
-]
-
 [tool.ReportCoverage]
 fail_under = 60
 warn_under = 70
+
+[tool.pylint.main]
+django-settings-module="job_application_tracker.settings"
+load-plugins = [
+    "pylint_django",
+    "pylint_per_file_ignores",
+]
+max-line-length = 120
+ignore = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "manage.py",
+    "node_modules"
+]
+jobs = 0
+recursive = true
+source-roots = "."
+
+[tool.pylint.'messages control']
+per-file-ignores = [
+    "*/forms.py:too-few-public-methods",
+    "*/migrations/*:line-too-long,invalid-name,missing-module-docstring,missing-class-docstring",
+    "*/models.py:too-few-public-methods",
+    "*/tests/*:duplicate-code,missing-function-docstring,too-many-ancestors,too-many-public-methods",
+    "*/urls.py:invalid-name",
+    "*/views.py:too-many-ancestors",
+    "applications/tests/test_authenticated_user.py:too-many-lines",
+    "job_application_tracker/middleware.py:too-few-public-methods",
+    "job_application_tracker/settings.py:line-too-long,consider-using-f-string,invalid-name"
+]
 
 [tool.setuptools]
 py-modules = [
