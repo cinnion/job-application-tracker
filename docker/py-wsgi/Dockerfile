@@ -66,7 +66,7 @@ RUN npm run build
 # TESTER #
 ##########
 #
-# Test runner, for running flake and the unit tests for coverage.
+# Test runner, for running pylint and the unit tests for coverage.
 #
 FROM builder AS tester
 
@@ -81,9 +81,9 @@ WORKDIR /usr/src/app
 RUN pip install '.[dev]'
 
 #
-# Run flake8
+# Run pylint
 #
-RUN flake8
+RUN pylint --disable=fixme .
 
 ##############
 # Production #
