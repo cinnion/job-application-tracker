@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 Default values come from django.conf.global_settings.py, and this file has been reordered to match that file, with
 settings for extensions added at the end of the file.
 """
-from pathlib import Path
-import environ
 import os
+from pathlib import Path
+
+import environ
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -283,10 +284,6 @@ if DJANGO_ENV == 'development':
 ################
 # applications #
 ################
-
-# Google API key for use by applications.importsheet
-GOOGLE_API_KEY = env('GOOGLE_API_KEY')
-GOOGLE_SPREADSHEET_ID = env('GOOGLE_SPREADSHEET_ID')
 
 ####################
 # applications_api #
