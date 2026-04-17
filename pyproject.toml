@@ -65,7 +65,7 @@ dev = [
     "django-upgrade==1.30.0",                                   # Upgrade tool
     "djangorestframework-stubs==3.16.9",                        # DRF stubs for code insight.
     "pipdeptree==2.35.1",                                       # To see dependency tree
-    "pylint[spelling]==4.0.5",                                  # Lint
+    "pylint[spelling]@git+https://github.com/cinnion/pylint.git@bugfixes",   # Lint
     "pylint-django==2.7.0",                                     # Lint extensions for django
     "pylint-per-file-ignores==3.2.1",                           # Lint - Add specific rule ignores based on the file.
     "unittest-parametrize==1.8.0",                              # To give us parameterized unit tests in unittest.
@@ -135,7 +135,10 @@ ignore = [
     "node_modules"
 ]
 jobs = 0
+persistent = true
 recursive = true
+reports = true
+score = true
 source-roots = "."
 
 [tool.pylint.'messages control']
