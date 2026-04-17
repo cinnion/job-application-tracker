@@ -12,6 +12,9 @@ dependencies = [
     # Django
     "Django==6.0.4",
 
+    # Django allauth
+    "django-allauth==65.16.0",
+
     # Advanced .env support
     "django-environ==0.13.0",
 
