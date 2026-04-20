@@ -12,6 +12,8 @@
     <script type="text/javascript">
         {% block js %}{% endblock %}
     </script>
+        {% block extra_head %}
+        {% endblock extra_head %}
 </head>
 <body class="{% block extra_body_classes %}{% endblock %}">
     {% include "navbar.html" %}
