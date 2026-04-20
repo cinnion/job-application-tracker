@@ -1,0 +1,29 @@
+{% extends "master.html" %}
+
+{% block extra_body_classes %}auth{% endblock %}
+
+{% block content %}
+    <div class="auth-div container-sm text-center">
+        <div class="card">
+            <div class="card-header bg-primary-subtle h3">
+                {{ SITE_NAME }}
+            </div>
+        </div>
+        <h4 class="text-center">{% block user_title %}{% endblock %}</h4>
+
+        {% block user_instructions %}{% endblock %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">There were errors processing this form:</h4>
+                <ul>
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% block user_form %}{% endblock %}
+    </div>
+{% endblock %}
