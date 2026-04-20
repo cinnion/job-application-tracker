@@ -24,7 +24,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
     """
     This test class tests the user authentication for the ChangePasswordView
     """
-    test_url = reverse("password_change")
+    test_url = reverse("account_change_password")
     expected_form = PasswordChangeForm
     expected_success_url = reverse("password_change_done")
 

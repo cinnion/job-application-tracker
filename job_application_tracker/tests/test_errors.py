@@ -32,7 +32,7 @@ class TestErrors(BaseAuthenticatedUserMixin, TestCase):
         # Arrange
         client = self.client_class(enforce_csrf_checks=True)
         client.force_login(self.test_user_1)
-        test_url = reverse("password_change")
+        test_url = reverse("account_change_password")
         data = {
             "old_password": "testuser1",
             "new_password1": "Yfr_A0Qdk7W-s2s01Mec ",

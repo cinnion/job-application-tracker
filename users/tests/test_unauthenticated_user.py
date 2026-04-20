@@ -16,7 +16,7 @@ class TestUnauthenticatedChangePasswordView(TestCase):
     """
     This class tests our extensions to the default user model found in django.contrib.auth.models
     """
-    test_url = reverse("password_change")
+    test_url = reverse("account_change_password")
     login_url = reverse(settings.LOGIN_URL)
     expected_redirect_url = f"{login_url}?{urlencode({'next': test_url})}"
 
