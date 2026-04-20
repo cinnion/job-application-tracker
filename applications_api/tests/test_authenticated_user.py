@@ -1,6 +1,8 @@
 """
 These are tests which deal with authenticated user requests for the URLs associated with this package.
 """
+import unittest
+
 from django.db.models import QuerySet
 from django.urls import reverse
 from rest_framework import status
@@ -216,3 +218,7 @@ class AuthenticatedUserJobApplicationsApiTests(BaseAuthenticatedUserMixin, APITe
 
         # print(f"expected_data = {json.dumps(expected_data, indent=4)}")
         # print(f"response_data = {json.dumps(response.data, indent=4)}")
+
+
+if __name__ == "__main__":
+    unittest.main()

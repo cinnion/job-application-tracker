@@ -3,6 +3,7 @@ Tests surrounding our utilities.
 """
 import json
 import os
+import unittest
 from os import unlink
 from pathlib import Path
 
@@ -112,3 +113,7 @@ class TestUtils(TestCase):
 
         # Assert
         self.assertEqual(results, self.build_info)
+
+
+if __name__ == "__main__":
+    unittest.main()

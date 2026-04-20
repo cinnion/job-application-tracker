@@ -3,6 +3,7 @@ Tests associated with our main project views (home/about).
 """
 import json
 import os
+import unittest
 from os import unlink
 from pathlib import Path
 
@@ -156,3 +157,7 @@ class TestHomeView(TestCase):
         # Assert
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, self.template_used)
+
+
+if __name__ == "__main__":
+    unittest.main()
