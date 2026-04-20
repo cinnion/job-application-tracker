@@ -24,7 +24,7 @@
                     </ul>
                 </li>
 
-                <form id="logout-form" method="post" action="{% url 'logout' %}">
+                <form id="logout-form" method="post" action="{% url 'account_logout' %}">
                     {% csrf_token %}
                 </form>
             {% else %}
