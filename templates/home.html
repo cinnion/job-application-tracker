@@ -2,7 +2,7 @@
 {% load render_bundle from webpack_loader %}
 {% load static %}
 
-{% block title %}Home{% endblock %}
+{% block head_title %}Home{% endblock %}
 
 {% block additional_css %}
     <style>
@@ -45,5 +45,4 @@
     <div class="alert alert-info" role="alert">
         Please note that the database for this application is reset every two hours.
     </div>
-
 {% endblock %}

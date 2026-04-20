@@ -4,10 +4,9 @@
 {% load crispy_forms_tags %}
 {% load render_bundle from webpack_loader %}
 
-{% block title %}Application Details{% endblock %}
+{% block head_title %}Application Details{% endblock %}
 
 {% block content %}
-
     <h1>Application Detail</h1>
     <form id="rendered-form" method="post">
         {% csrf_token %}
@@ -24,5 +23,4 @@
 
         <button class="form-submit">Save Application</button>
     </form>
-
 {% endblock %}

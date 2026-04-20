@@ -1,7 +1,7 @@
 {% extends "master.html" %}
 {% load render_bundle from webpack_loader %}
 
-{% block title %}About{% endblock %}
+{% block head_title %}About{% endblock %}
 
 {% block content %}
     <h1>About this application</h1>
@@ -23,5 +23,4 @@
     <div>Git Branch: {{ BUILD_INFO.GIT_BRANCH }}</div> 
     <div>Git Tag: {{ BUILD_INFO.GIT_TAG }}</div>
     <div>Last Built: {{ BUILD_INFO.BUILD_DATE }}</div>
-
 {% endblock %}
