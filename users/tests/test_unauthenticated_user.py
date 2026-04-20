@@ -5,6 +5,7 @@ actions.
 import unittest
 from urllib.parse import urlencode
 
+from django.conf import settings
 from django.urls import reverse
 
 from core.test import TestCase
@@ -16,7 +17,7 @@ class TestUnauthenticatedChangePasswordView(TestCase):
     This class tests our extensions to the default user model found in django.contrib.auth.models
     """
     test_url = reverse("password_change")
-    login_url = reverse("login")
+    login_url = reverse(settings.LOGIN_URL)
     expected_redirect_url = f"{login_url}?{urlencode({'next': test_url})}"
 
     def test_get_receives_redirect_to_login_with_next(self):
@@ -100,7 +101,7 @@ class TestUnauthenticatedEditProfileView(TestCase):
     This class tests our extensions to the default user model found in django.contrib.auth.models
     """
     test_url = reverse("profile")
-    login_url = reverse("login")
+    login_url = reverse(settings.LOGIN_URL)
     expected_redirect_url = f"{login_url}?{urlencode({'next': test_url})}"
 
     def test_get_receives_redirect_to_login_with_next(self):

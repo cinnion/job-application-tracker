@@ -3,6 +3,7 @@ The tests for the DRF API for job applications involving unauthenticated users.
 """
 import unittest
 
+from django.conf import settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.exceptions import ErrorDetail
@@ -14,13 +15,14 @@ class UnauthenticatedApplicationTests(APITestCase):
     """
     The unauthenticated user tests for the DRF API for job applications.
     """
+
     def setUp(self):
         """
         Create our client for use by the tests.
         """
         self.client = self.client_class()
 
-        self.login_url = reverse("login")
+        self.login_url = reverse(settings.LOGIN_URL)
 
     def test_unauthenticated_user_get_receives_403_forbidden_from_applications_api_list(self):
         # Arrange

@@ -2,6 +2,7 @@
 Our views related to job applications, both as a list and as the detailed form of an
 individual job application.
 """
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Model
 from django.urls import reverse_lazy
@@ -19,7 +20,7 @@ class Applications(LoginRequiredMixin, Log404Mixin, TemplateView):
     """
     http_method_names = ["get"]
     template_name = "ApplicationList.html"
-    login_url = reverse_lazy("login")
+    login_url = reverse_lazy(settings.LOGIN_URL)
 
 
 class ApplicationDetails(LoginRequiredMixin, Log404Mixin, UpdateView):
@@ -31,7 +32,7 @@ class ApplicationDetails(LoginRequiredMixin, Log404Mixin, UpdateView):
     form_class = EditApplication
     pk_url_kwarg = "appid"
     template_name = "ApplicationDetails.html"
-    login_url = reverse_lazy("login")
+    login_url = reverse_lazy(settings.LOGIN_URL)
     success_url = reverse_lazy("applications:application-list")
 
     def get_object(self, queryset=None) -> Model:

@@ -9,7 +9,7 @@ from django.urls import path, URLResolver, URLPattern
 from . import views
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path("login/", AdminViews.LoginView.as_view(), name="login"),
+    path("login/", AdminViews.LoginView.as_view(), name="account_login"),
     path("logout/", AdminViews.LogoutView.as_view(), name="logout"),
     path("password_change/", views.PasswordChangeView.as_view(), name="password_change"),
     path("password_change/done/", AdminViews.PasswordChangeDoneView.as_view(), name="password_change_done"),

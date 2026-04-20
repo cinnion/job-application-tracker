@@ -199,7 +199,7 @@ SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'account_login'
 
 LOGOUT_REDIRECT_URL = 'home'
 

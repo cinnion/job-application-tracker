@@ -4,6 +4,7 @@ job applications either as a list or individually.
 """
 import unittest
 
+from django.conf import settings
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -14,13 +15,14 @@ class UnauthenticatedApplicationTests(TestCase):
     and either get redirected to the login page, or get the appropriate error for methods which
     do not exist.
     """
+
     def setUp(self):
         """
         Create our client for use by the tests.
         """
         self.client = Client()
 
-        self.login_url = reverse("login")
+        self.login_url = reverse(settings.LOGIN_URL)
 
     def test_unauthenticated_user_gets_redirected_from_applications(self):
         # Arrange
