@@ -13,7 +13,7 @@ dependencies = [
     "Django==6.0.4",
 
     # Django allauth
-    "django-allauth==65.16.0",
+    "django-allauth@git+https://codeberg.org/cinnion/django-allauth.git@bugfixes",
 
     # Advanced .env support
     "django-environ==0.13.0",
