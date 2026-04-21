@@ -10,6 +10,7 @@ class ProfileForm(ModelForm):
     """
     The form for a user to be able to edit their profile.
     """
+
     class Meta:
         """
         Our class metadata, defining the model to use and what fields to exclude from the form.

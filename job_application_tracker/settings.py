@@ -106,6 +106,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'allauth',
+    'allauth.account',
     'crispy_bootstrap5',
     'crispy_forms',
     'django_password_validators',
@@ -188,6 +190,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 # Whether the session cookie should be secure (https:// only).
@@ -199,12 +202,19 @@ SESSION_COOKIE_SECURE = env.bool('SESSION_COOKIE_SECURE', True)
 
 AUTH_USER_MODEL = "users.User"
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 LOGIN_URL = 'account_login'
 
 LOGOUT_REDIRECT_URL = 'home'
 
 LOGIN_REDIRECT_URL = 'home'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -288,6 +298,21 @@ if DJANGO_ENV == 'development':
 ####################
 # applications_api #
 ####################
+
+###########
+# allauth #
+###########
+
+ACCOUNT_VERIFICATION_METHOD = "email"
+ACCOUNT_SIGNUP_FIELDS = [
+    "username*",
+    "email*",
+    "email2*",
+    "password1*",
+    "password2*",
+]
+ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = "phone_number"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 ####################################
 # crispy_forms / crispy_bootstrap5 #
