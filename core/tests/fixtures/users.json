@@ -31,7 +31,7 @@
     "model": "users.user",
     "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$1200000$ATlwBOUWcGcPG9deiJH4BD$vh1sv3HY4mtQpJZXQdNuJ0TgyW0PpjdFWDDsVZKhWG4=",
+        "password": "pbkdf2_sha256$1200000$loDKTjl7hUBTemWMmr7oNM$JYOeG1LLeAFBmLhYRKB1YpHe9OIVJ3QERRZAbpVdmMY=",
         "last_login": null,
         "is_superuser": true,
         "username": "testuser1",
@@ -52,7 +52,7 @@
     "model": "users.user",
     "pk": 2,
     "fields": {
-        "password": "pbkdf2_sha256$1200000$OWdlPIyxyHePoc3lXnOpQb$LeurQMTOPvtfcGNFJtLLMcnpwyDZDuNh27xj1I6tO0E=",
+        "password": "pbkdf2_sha256$1200000$iR4gUVgr6fFjIFnC5GYUlB$8blYlqWNkd26XZBLWxKxLpHCWe3t+cbtFbUYgK6BI78=",
         "last_login": null,
         "is_superuser": false,
         "username": "testuser2",
@@ -77,7 +77,7 @@
     "model": "users.user",
     "pk": 3,
     "fields": {
-        "password": "pbkdf2_sha256$1200000$ZR1Be1gMU5JwDfXHBqmcJ5$qrcUKUwv7kZy2WaZZwvELH765DrOZCE5e8BZ7M5uyO4=",
+        "password": "pbkdf2_sha256$1200000$SD85DHtbNPWGFdXGS0aXrD$l761tsJSVFKRljbILO56SRfTgyCyksS/RCm8u3olDAQ=",
         "last_login": null,
         "is_superuser": false,
         "username": "testuser3",
@@ -102,7 +102,7 @@
     "model": "users.user",
     "pk": 4,
     "fields": {
-        "password": "pbkdf2_sha256$1200000$rRICc6mHmDSmI4V7AKsXej$xwvAMUCIMKVE3irmMOkLxLLKWr/9e1OFAqs69KuXpFU=",
+        "password": "pbkdf2_sha256$1200000$cyVcbcGwQgxtOEaIKyCW5x$uo0NgphxL4sKj3gqkJMnI2smXmizt3zGj0VjFao/h4E=",
         "last_login": null,
         "is_superuser": false,
         "username": "testuser4",
@@ -117,6 +117,54 @@
         "suffix": "",
         "groups": [],
         "user_permissions": []
+    }
+},
+{
+    "model": "account.emailaddress",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "testuser1"
+        ],
+        "email": "testuser1@example.com",
+        "verified": true,
+        "primary": true
+    }
+},
+{
+    "model": "account.emailaddress",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "testuser2"
+        ],
+        "email": "testuser2@example.com",
+        "verified": true,
+        "primary": true
+    }
+},
+{
+    "model": "account.emailaddress",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "testuser3"
+        ],
+        "email": "testuser3@example.com",
+        "verified": true,
+        "primary": true
+    }
+},
+{
+    "model": "account.emailaddress",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "testuser4"
+        ],
+        "email": "testuser4@example.com",
+        "verified": true,
+        "primary": true
     }
 }
 ]
