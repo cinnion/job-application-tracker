@@ -5,11 +5,15 @@ actions.
 import unittest
 from typing import cast
 
+from allauth.account.forms import ChangePasswordForm
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.forms import (
-    PasswordChangeForm
+from django.contrib.messages import (
+    Message,
+    constants as messages,
 )
+from django.contrib.messages.test import MessagesTestMixin
 from django.forms.forms import BaseForm
+from django.test import override_settings
 from django.urls import reverse
 from unittest_parametrize import parametrize
 
@@ -20,13 +24,14 @@ from users.models import User
 
 
 # noinspection DuplicatedCode
-class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
+@override_settings(ACCOUNT_RATE_LIMITS=False)
+class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, MessagesTestMixin, TestCase):
     """
     This test class tests the user authentication for the ChangePasswordView
     """
     test_url = reverse("account_change_password")
-    expected_form = PasswordChangeForm
-    expected_success_url = reverse("password_change_done")
+    expected_form = ChangePasswordForm
+    expected_success_url = test_url
 
     @staticmethod
     def get_user_fields(user: AbstractBaseUser) -> dict:
@@ -57,7 +62,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
 
         # Assert
         self.assertEqual(response.status_code, 200)
-        self.assertIsInstance(response.context_data["form"], PasswordChangeForm)
+        self.assertIsInstance(response.context_data["form"], ChangePasswordForm)
 
     def test_staff_can_get_change_password_form(self):
         # Arrange
@@ -70,7 +75,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
 
         # Assert
         self.assertEqual(response.status_code, 200)
-        self.assertIsInstance(response.context_data["form"], PasswordChangeForm)
+        self.assertIsInstance(response.context_data["form"], ChangePasswordForm)
 
     def test_user_with_perm_can_get_change_password_form(self):
         # Arrange
@@ -83,7 +88,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
 
         # Assert
         self.assertEqual(response.status_code, 200)
-        self.assertIsInstance(response.context_data["form"], PasswordChangeForm)
+        self.assertIsInstance(response.context_data["form"], ChangePasswordForm)
 
     def test_user_without_perm_cannot_get_change_password_form(self):
         # Arrange
@@ -106,9 +111,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser1",
-            "new_password1": "Yfr_A0Qdk7W-s2s01Mec ",
-            "new_password2": "Yfr_A0Qdk7W-s2s01Mec ",
+            "oldpassword": "Test-user1",
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
         }
 
         # Act
@@ -128,7 +133,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, ["password"])
-        self.assertTrue(user.check_password(data["new_password1"]))
+        self.assertTrue(user.check_password(data["password1"]))
 
     def test_staff_bad_old_password_post_gets_errors(self):
         # Arrange
@@ -138,9 +143,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "asdf",
-            "new_password1": "Yfr_A0Qdk7W-s2s01Mec ",
-            "new_password2": "Yfr_A0Qdk7W-s2s01Mec ",
+            "oldpassword": "asdf",
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
         }
 
         # Act
@@ -150,11 +155,11 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context_data["form"]
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual(len(form.errors["old_password"]), 1)
+        self.assertEqual(len(form.errors["oldpassword"]), 1)
         self.assertFormError(
             form,
-            "old_password",
-            "Your old password was entered incorrectly. Please enter it again."
+            "oldpassword",
+            "Please type your current password."
         )
         user.refresh_from_db()
         post_dict = self.get_user_fields(user)
@@ -163,7 +168,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     def test_staff_new_password_too_similar_post_gets_errors(self):
         # Arrange
@@ -173,9 +178,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser2",
-            "new_password1": "TestUser_2",
-            "new_password2": "TestUser_2",
+            "oldpassword": "Test-user2",
+            "password1": "TestUser_2",
+            "password2": "TestUser_2",
         }
 
         # Act
@@ -185,10 +190,10 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context_data["form"]
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual(len(form.errors["new_password2"]), 1)
+        self.assertEqual(len(form.errors["password1"]), 1)
         self.assertFormError(
             form,
-            "new_password2",
+            "password1",
             "The password is too similar to the username."
         )
         user.refresh_from_db()
@@ -198,7 +203,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     def test_staff_new_password_too_short_post_gets_errors(self):
         # Arrange
@@ -208,9 +213,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser2",
-            "new_password1": "aSdf_1",
-            "new_password2": "aSdf_1",
+            "oldpassword": "Test-user2",
+            "password1": "aSdf_1",
+            "password2": "aSdf_1",
         }
 
         # Act
@@ -220,10 +225,10 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context_data["form"]
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual(len(form.errors["new_password2"]), 1)
+        self.assertEqual(len(form.errors["password1"]), 1)
         self.assertFormError(
             form,
-            "new_password2",
+            "password1",
             "This password is too short. It must contain at least 8 characters."
         )
         user.refresh_from_db()
@@ -233,7 +238,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     # Commonly used password test would go here
 
@@ -245,9 +250,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser2",
-            "new_password1": "987654321",
-            "new_password2": "987654321",
+            "oldpassword": "Test-user2",
+            "password1": "987654321",
+            "password2": "987654321",
         }
 
         # Act
@@ -257,10 +262,10 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context_data["form"]
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual(len(form.errors["new_password2"]), 6)
+        self.assertEqual(len(form.errors["password1"]), 6)
         self.assertFormError(
             form,
-            "new_password2",
+            "password1",
             [
                 "This password is too common.",
                 "This password is entirely numeric.",
@@ -277,7 +282,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     def test_staff_new_password_no_digits_post_gets_errors(self):
         # Arrange
@@ -287,9 +292,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser2",
-            "new_password1": "Hey Sparky!",
-            "new_password2": "Hey Sparky!",
+            "oldpassword": "Test-user2",
+            "password1": "Hey Sparky!",
+            "password2": "Hey Sparky!",
         }
 
         # Act
@@ -299,10 +304,10 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context_data["form"]
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual(len(form.errors["new_password2"]), 1)
+        self.assertEqual(len(form.errors["password1"]), 1)
         self.assertFormError(
             form,
-            "new_password2",
+            "password1",
             "This password must contain at least 1 digit."
         )
         user.refresh_from_db()
@@ -312,7 +317,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     def test_staff_new_password_no_special_post_gets_errors(self):
         # Arrange
@@ -322,9 +327,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser2",
-            "new_password1": "Hey Sparky1",
-            "new_password2": "Hey Sparky1",
+            "oldpassword": "Test-user2",
+            "password1": "HeySparky1",
+            "password2": "HeySparky1",
         }
 
         # Act
@@ -334,10 +339,10 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         form = response.context_data["form"]
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual(len(form.errors["new_password2"]), 1)
+        self.assertEqual(len(form.errors["password1"]), 1)
         self.assertFormError(
             form,
-            "new_password2",
+            "password1",
             "This password must contain at least 1 special character."
         )
         user.refresh_from_db()
@@ -347,7 +352,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     def test_staff_can_post_change_password_form(self):
         # Arrange
@@ -357,9 +362,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser2",
-            "new_password1": "Yfr_A0Qdk7W-s2s01Mec ",
-            "new_password2": "Yfr_A0Qdk7W-s2s01Mec ",
+            "oldpassword": "Test-user2",
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
         }
 
         # Act
@@ -372,6 +377,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
             status_code=302,
             target_status_code=200
         )
+        self.assertMessages(response, [Message(messages.SUCCESS, "Password successfully changed.")])
         user.refresh_from_db()
         post_dict = self.get_user_fields(user)
         changed_fields = [k
@@ -379,7 +385,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, ["password"])
-        self.assertTrue(user.check_password(data["new_password1"]))
+        self.assertTrue(user.check_password(data["password1"]))
 
     def test_user_with_perm_can_post_change_password_form(self):
         # Arrange
@@ -389,9 +395,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser3",
-            "new_password1": "Yfr_A0Qdk7W-s2s01Mec ",
-            "new_password2": "Yfr_A0Qdk7W-s2s01Mec ",
+            "oldpassword": "Test-user3",
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
         }
 
         # Act
@@ -404,6 +410,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
             status_code=302,
             target_status_code=200
         )
+        self.assertMessages(response, [Message(messages.SUCCESS, "Password successfully changed.")])
         user.refresh_from_db()
         post_dict = self.get_user_fields(user)
         changed_fields = [k
@@ -411,7 +418,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, ["password"])
-        self.assertTrue(user.check_password(data["new_password1"]))
+        self.assertTrue(user.check_password(data["password1"]))
 
     def test_user_without_perm_cannot_post_change_password_form(self):
         # Arrange
@@ -421,9 +428,9 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
         user.refresh_from_db()  # Get a refreshed copy with the updated last_login
         orig_dict = self.get_user_fields(user)
         data = {
-            "old_password": "testuser4",
-            "new_password1": "Yfr_A0Qdk7W-s2s01Mec ",
-            "new_password2": "Yfr_A0Qdk7W-s2s01Mec ",
+            "oldpassword": "Test-user4",
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
         }
 
         # Act
@@ -439,7 +446,7 @@ class TestAuthenticatedChangePasswordView(BaseAuthenticatedUserMixin, TestCase):
                           if orig_dict[k] != post_dict[k]
                           ]
         self.assertEqual(changed_fields, [])
-        self.assertFalse(user.check_password(data["new_password1"]))
+        self.assertFalse(user.check_password(data["password1"]))
 
     def test_put_request_gets_an_error(self):
         # Arrange
@@ -611,9 +618,9 @@ class TestAuthenticatedEditProfileView(BaseAuthenticatedUserMixin, TestCase):
                 "password": "Some ignored password"
             },
             {
-                "old_password": "Some junk",
-                "new_password1": "More ignored junk",
-                "new_password2": "More ignored junk"
+                "oldpassword": "Some junk",
+                "password1": "More ignored junk",
+                "password2": "More ignored junk"
             }
         ]
     )

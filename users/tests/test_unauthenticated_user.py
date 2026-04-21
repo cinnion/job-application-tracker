@@ -11,6 +11,24 @@ from django.urls import reverse
 from core.test import TestCase
 
 
+class TestUnauthenticatedLoginView(TestCase):
+    """
+    This class tests our login view.
+    """
+    login_url = reverse("account_login")
+
+    def test_get_receives_login_view(self):
+        # Arrange
+
+        # Act
+        response = self.client.get(self.login_url)
+
+        # Assert
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "master.html")
+        self.assertTemplateUsed(response, "registration/login.html")
+
+
 # noinspection DuplicatedCode - These tests are near duplicates of one another, but test different endpoints.
 class TestUnauthenticatedChangePasswordView(TestCase):
     """
