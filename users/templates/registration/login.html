@@ -10,10 +10,10 @@
         {% csrf_token %}
 
         {% for field in form %}
-            <div class="row mb-3">
-                <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label text-end">{{ field.label }}</label>
-                <div class="col-sm-9">
+            {% if field.name != "remember" %}
+                <div class="row form-floating mb-3">
                     {{ field|add_class:"form-control"|add_error_class:"is-invalid" }}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     <div class="invalid-feedback text-start">
                         {{ field.errors }}
                     </div>
@@ -21,13 +21,13 @@
                         <small class="text-muted text-start">{{ field.help_text }}</small>
                     {% endif %}
                 </div>
-            </div>
+            {% else %}
+                <div class="mb-3">
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+            {% endif %}
         {% endfor %}
         <button type="submit">Log In</button>
     </form>
-    <div class="mt-5">
-        <p>
-            Forgot your login? <a href="{% url "account_reset_password" %}">Click here</a>
-        </p>
-    </div>
 {% endblock %}
