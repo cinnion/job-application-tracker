@@ -5,7 +5,6 @@ from allauth.account.views import (
     ConfirmEmailView as AllauthConfirmEmailView,
     ConfirmEmailVerificationCodeView as AllauthConfirmEmailVerificationCodeView,
     EmailVerificationSentView as AllauthEmailVerificationSentView,
-    LoginView as AllauthLoginView,
     PasswordChangeView as AllauthPasswordChangeView,
 )
 from django.utils.decorators import method_decorator
@@ -45,10 +44,6 @@ class ConfirmEmailVerificationCodeView(AllauthConfirmEmailVerificationCodeView):
 
 class EmailVerificationSentView(AllauthEmailVerificationSentView):
     template_name = "verification_sent.html"
-
-
-class LoginView(AllauthLoginView):
-    template_name = 'registration/login.html'
 
 
 class PasswordChangeView(PermissionRequiredMixin, AllauthPasswordChangeView):

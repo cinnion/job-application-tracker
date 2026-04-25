@@ -35,10 +35,10 @@ class TestUnauthenticatedLoginView(MessagesTestMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "master.html")
         self.assertTemplateUsed(response, "user-master.html")
-        self.assertTemplateUsed(response, "registration/login.html")
+        self.assertTemplateUsed(response, "account/login.html")
         form = response.context_data["form"]
-        self.assertEqual(form.fields['login'].label, "Username")
-        self.assertEqual(form.fields['password'].label, "Password")
+        self.assertEqual(form.fields["login"].label, "Username")
+        self.assertEqual(form.fields["password"].label, "Password")
 
     def test_post_unverified_user_with_correct_credentials_gets_verification_page(self):
         # Arrange
