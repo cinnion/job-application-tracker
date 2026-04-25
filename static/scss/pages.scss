@@ -8,6 +8,6 @@ body.auth div.auth-div {
     max-width:          576px !important;
 }
 
-body.auth div#messages {
+body.auth div#messages, body.auth div.helptext, body.auth span.helptext {
     text-align:         left;
 }
