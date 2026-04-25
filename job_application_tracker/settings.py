@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
     'allauth',
     'allauth.account',
     'crispy_bootstrap5',
@@ -134,6 +135,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # Default email address to use for various automated correspondence from
 # the site managers.
