@@ -9,17 +9,31 @@
     </li>
 {% endif %}
 {% for field, errors in fields %}
-    <li{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
-        {{ errors }}
-        {{ field|add_class:"form-control"|add_error_class:"is_invalid" }}
-        {% if field.label %}{{ field.label_tag }}{% endif %}
-        {% if field.help_text %}
-            <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
-        {% endif %}
-        {% if forloop.last %}
-            {% for field in hidden_fields %}{{ field }}{% endfor %}
-        {% endif %}
-    </li>
+    {% if field.widget_type == "checkbox" or field.widget_type == "radio" %}
+        <li{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+            {{ errors }}
+            {{ field|add_class:"form-control"|add_error_class:"is_invalid" }}
+            {% if field.label %}{{ field.label_tag }}{% endif %}
+            {% if field.help_text %}
+                <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
+            {% endif %}
+            {% if forloop.last %}
+                {% for field in hidden_fields %}{{ field }}{% endfor %}
+            {% endif %}
+        </li>
+    {% else %}
+        <li{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+            {{ errors }}
+            {{ field|add_class:"form-control"|add_error_class:"is_invalid" }}
+            {% if field.label %}{{ field.label_tag }}{% endif %}
+            {% if field.help_text %}
+                <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
+            {% endif %}
+            {% if forloop.last %}
+                {% for field in hidden_fields %}{{ field }}{% endfor %}
+            {% endif %}
+        </li>
+    {% endif %}
 {% endfor %}
 {% if not fields and not errors %}
     {% for field in hidden_fields %}{{ field }}{% endfor %}

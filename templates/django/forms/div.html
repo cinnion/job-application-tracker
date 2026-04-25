@@ -3,12 +3,21 @@
     <div>{% for field in hidden_fields %}{{ field }}{% endfor %}</div>
 {% endif %}
 {% for field, errors in fields %}
-    <div{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
-        {{ field.as_field_group }}
-        {% if forloop.last %}
-            {% for field in hidden_fields %}{{ field }}{% endfor %}
-        {% endif %}
-    </div>
+    {% if field.widget_type == "checkbox" or field.widget_type == "radio" %}
+        <div{% with classes=field.css_classes|add:" form-check" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+            {{ field.as_field_group }}
+            {% if forloop.last %}
+                {% for field in hidden_fields %}{{ field }}{% endfor %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+            {{ field.as_field_group }}
+            {% if forloop.last %}
+                {% for field in hidden_fields %}{{ field }}{% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
 {% endfor %}
 {% if not fields and not errors %}
     {% for field in hidden_fields %}{{ field }}{% endfor %}

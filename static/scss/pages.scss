@@ -11,3 +11,8 @@ body.auth div.auth-div {
 body.auth div#messages, body.auth div.helptext, body.auth span.helptext {
     text-align:         left;
 }
+
+div.form-check label, p.form-check label, li.form-check label {
+    text-align:         left;
+    display:            block;
+}
