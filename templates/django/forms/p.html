@@ -5,11 +5,11 @@
     <p>{% for field in hidden_fields %}{{ field }}{% endfor %}</p>
 {% endif %}
 {% for field, errors in fields %}
-    {{ errors }}
     {% if field.widget_type == "checkbox" or field.widget_type == "radio" %}
-        <p{% with classes=field.css_classes|add:" form-check" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+        <p{% with classes=field.css_classes|add:" form-check position-relative mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
             {{ field|add_class:"form-check-input"|add_error_class:"is-invalid" }}
-            {% if field.label %}{{ field.label_tag|add_class:"form-check_label" }}{% endif %}
+            {% if field.label %}<label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>{% endif %}
+            {{ errors }}
             {% if field.help_text %}
                 <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
             {% endif %}
@@ -18,9 +18,10 @@
             {% endif %}
         </p>
     {% else %}
-        <p{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+        <p{% with classes=field.css_classes|add:" form-floating position-relative mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
             {{ field|add_class:"form-control"|add_error_class:"is-invalid" }}
             {% if field.label %}{{ field.label_tag }}{% endif %}
+            {{ errors }}
             {% if field.help_text %}
                 <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
             {% endif %}

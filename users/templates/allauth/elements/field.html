@@ -1,42 +1,41 @@
 {% load allauth %}
-{{ attrs.errors }}
-<p>
-    {% if attrs.type == "textarea" %}
-        <textarea {% if attrs.required %}required{% endif %}
-                  {% if attrs.rows %}rows="{{ attrs.rows }}"{% endif %}
-                  {% if attrs.disabled %}disabled{% endif %}
-                  {% if attrs.readonly %}readonly{% endif %}
-                  {% if attrs.checked %}checked{% endif %}
-                  {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
-                  {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
-                  {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}>{% slot value %}{% endslot %}
-                  {% with classes=attrs.class|add:"form-control{% if attrs.errors %}is_invalid{% endif %}" %}class="{{ classes }}"{% endwith %}
+
+{% if attrs.type == "textarea" %}
+    <textarea {% if attrs.required %}required{% endif %}
+              {% if attrs.rows %}rows="{{ attrs.rows }}"{% endif %}
+              {% if attrs.disabled %}disabled{% endif %}
+              {% if attrs.readonly %}readonly{% endif %}
+              {% if attrs.checked %}checked{% endif %}
+              {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
+              {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+              {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}>{% slot value %}{% endslot %}
+        {% with classes=attrs.class|add:" form-control{% if attrs.errors %} is-invalid{% endif %}" %}class="{{ classes }}"{% endwith %}
         </textarea>
-        <label for="{{ attrs.id }}">
-            {% slot label %}
-            {% endslot %}
-        </label>
-    {% else %}
-        <input {% if attrs.required %}required{% endif %}
-               {% if attrs.disabled %}disabled{% endif %}
-               {% if attrs.readonly %}readonly{% endif %}
-               {% if attrs.checked %}checked{% endif %}
-               {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
-               {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
-               {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}
-               {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %}
-               {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %}
-               {% with classes=attrs.class|add:"form-control{% if attrs.errors %}is_invalid{% endif %}" %}class="{{ classes }}"{% endwith %}
-               type="{{ attrs.type }}">
-            <label for="{{ attrs.id }}">
-                {% slot label %}
-                {% endslot %}
-            </label>
-    {% endif %}
-    {% if slots.help_text %}
-        <span class="helptext">
+    <label for="{{ attrs.id }}">
+        {% slot label %}
+        {% endslot %}
+    </label>
+{% else %}
+    <input {% if attrs.required %}required{% endif %}
+           {% if attrs.disabled %}disabled{% endif %}
+           {% if attrs.readonly %}readonly{% endif %}
+           {% if attrs.checked %}checked{% endif %}
+           {% if attrs.name %}name="{{ attrs.name }}"{% endif %}
+           {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+           {% if attrs.placeholder %}placeholder="{{ attrs.placeholder }}"{% endif %}
+           {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %}
+           {% if attrs.value is not None %}value="{{ attrs.value }}"{% endif %}
+           {% with classes=attrs.class|add:" form-control{% if attrs.errors %} is-invalid{% endif %}" %}class="{{ classes }}"{% endwith %}
+           type="{{ attrs.type }}">
+    <label for="{{ attrs.id }}">
+        {% slot label %}
+        {% endslot %}
+    </label>
+{% endif %}
+{{ attrs.errors }}
+{% if slots.help_text %}
+    <span class="form-text helptext">
             {% slot help_text %}
             {% endslot %}
         </span>
-    {% endif %}
-</p>
+{% endif %}

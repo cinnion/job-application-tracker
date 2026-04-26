@@ -3,15 +3,20 @@
 {% if field.use_fieldset %}
     <fieldset{% if field.aria_describedby %} aria-describedby="{{ field.aria_describedby }}"{% endif %}>
 {% endif %}
-{{ field.errors }}
 {% if field.widget_type == "checkbox" or field.widget_type == "radio" %}
-    {{ field|add_class:"form-check-input"}}
-    {% if field.label %}<label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>{% endif %}
+    <div class="form-check">
+        {{ field|add_class:"form-check-input"}}
+        {% if field.label %}<label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>{% endif %}
+        {{ field.errors }}
+    </div>
 {% else %}
-    {{ field|add_class:"form-control"|add_error_class:"is_invalid" }}
-    {% if field.label %}{{ field.label_tag }}{% endif %}
+    <div class="form-floating">
+        {{ field|add_class:"form-control"|add_error_class:"is-invalid" }}
+        {% if field.label %}{{ field.label_tag }}{% endif %}
+        {{ field.errors }}
+    </div>
 {% endif %}
 {% if field.help_text %}
-    <div class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</div>
+    <div class="form-text helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</div>
 {% endif %}
 {% if field.use_fieldset %}</fieldset>{% endif %}

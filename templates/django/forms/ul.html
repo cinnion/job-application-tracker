@@ -10,10 +10,12 @@
 {% endif %}
 {% for field, errors in fields %}
     {% if field.widget_type == "checkbox" or field.widget_type == "radio" %}
-        <li{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
-            {{ errors }}
-            {{ field|add_class:"form-control"|add_error_class:"is_invalid" }}
-            {% if field.label %}{{ field.label_tag }}{% endif %}
+        <li{% with classes=field.css_classes|add:" position-relative mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+            <div class="form-check">
+                {{ field|add_class:"form-check-input"|add_error_class:"is_invalid" }}
+                {% if field.label %}<label for="{{ field.id_for_label }}" class="form-check-label">{{ field.label }}</label>{% endif %}
+                {{ errors }}
+            </div>
             {% if field.help_text %}
                 <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
             {% endif %}
@@ -22,10 +24,12 @@
             {% endif %}
         </li>
     {% else %}
-        <li{% with classes=field.css_classes|add:" form-floating mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
-            {{ errors }}
-            {{ field|add_class:"form-control"|add_error_class:"is_invalid" }}
-            {% if field.label %}{{ field.label_tag }}{% endif %}
+        <li{% with classes=field.css_classes|add:" form-floating position-relative mb-3" %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+            <div class="form-floating">
+                {{ field|add_class:"form-control"|add_error_class:"is-invalid" }}
+                {% if field.label %}{{ field.label_tag }}{% endif %}
+                {{ errors }}
+            </div>
             {% if field.help_text %}
                 <span class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>{{ field.help_text|safe }}</span>
             {% endif %}

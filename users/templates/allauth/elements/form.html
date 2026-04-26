@@ -1,7 +1,7 @@
 {% load allauth %}
 <form method="{{ attrs.method }}"
       {% if attrs.action %}action="{{ attrs.action }}"{% endif %}
-      class="inline-form {% if attrs.form.errors %}was-validated{% endif %}">
+      class="inline-form {% if attrs.form.errors %}{% endif %}">
     {% slot body %}
     {% endslot %}
     {% slot actions %}
