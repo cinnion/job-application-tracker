@@ -253,6 +253,9 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
 
         # Assert
         self.assertRedirects(response, self.redirect_url)
+        #self.assertTemplateUsed(response, "master.html")
+        #self.assertTemplateUsed(response, "user-master.html")
+        #self.assertTemplateUsed(response, "account/verification_sent.html")
         self.assertMessages(response, [Message(messages.INFO, f"Confirmation email sent to {data['email']}.")])
         self.assertEqual(get_user_model().objects.count(), 1)
         user = get_user_model().objects.get(username="testuser")

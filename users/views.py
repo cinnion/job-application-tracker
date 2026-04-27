@@ -26,24 +26,8 @@ from .forms import ProfileForm
 from .models import User
 
 
-@method_decorator(login_not_required, name="dispatch")
-def email_verification_sent(request: HttpRequest) -> HttpResponseBase:
-    if app_settings.EMAIL_VERIFICATION_BY_CODE_ENABLED:
-        return ConfirmEmailVerificationCodeView.as_view()(request)
-    else:
-        return EmailVerificationSentView.as_view()(request)
-
-
 class ConfirmEmailView(AllauthConfirmEmailView):
     template_name = "email_confirm.html"
-
-
-class ConfirmEmailVerificationCodeView(AllauthConfirmEmailVerificationCodeView):
-    template_name = "confirm_email_verification_code.html"
-
-
-class EmailVerificationSentView(AllauthEmailVerificationSentView):
-    template_name = "verification_sent.html"
 
 
 class PasswordChangeView(PermissionRequiredMixin, AllauthPasswordChangeView):

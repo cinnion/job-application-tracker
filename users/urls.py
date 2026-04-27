@@ -10,7 +10,7 @@ from django.urls import path, URLResolver, URLPattern
 from . import views
 
 urlpatterns: List[Union[URLResolver, URLPattern]] = [
-    path("confirm-email/", views.email_verification_sent, name="account_email_verification_sent"),
+    path("confirm-email/", AllauthViews.email_verification_sent, name="account_email_verification_sent"),
     path("confirm-email/<key>/", views.ConfirmEmailView.as_view(), name="account_confirm_email"),
     path("email/", AllauthViews.EmailView.as_view(), name="account_email"),
     path("inactive/", AllauthViews.AccountInactiveView.as_view(), name="account_inactive"),
