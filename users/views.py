@@ -2,32 +2,15 @@
 Our overridden user views.
 """
 from allauth.account.views import (
-    ConfirmEmailView as AllauthConfirmEmailView,
-    ConfirmEmailVerificationCodeView as AllauthConfirmEmailVerificationCodeView,
-    EmailVerificationSentView as AllauthEmailVerificationSentView,
     PasswordChangeView as AllauthPasswordChangeView,
 )
-from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
-from allauth.account.internal.decorators import login_not_required
-from django.http import (
-    Http404,
-    HttpRequest,
-    HttpResponse,
-    HttpResponseBase,
-    HttpResponseRedirect,
-)
-from allauth.account import app_settings
 
 from core.views.mixins import Log404Mixin
 from .forms import ProfileForm
 from .models import User
-
-
-class ConfirmEmailView(AllauthConfirmEmailView):
-    template_name = "email_confirm.html"
 
 
 class PasswordChangeView(PermissionRequiredMixin, AllauthPasswordChangeView):
