@@ -22,9 +22,14 @@ from core.test import TestCase
 class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
     """
     Test the SignupView as an unauthenticated user.
+
+    The fixture is needed so that we have our groups for testing purposes, but
+    it results in a base count of 4 users and email records before any test
+    creates a user.
     """
     signup_url = reverse("account_signup")
     redirect_url = reverse("account_email_verification_sent")
+    fixtures = ["core/tests/fixtures/users.json"]
 
     def test_get_gets_form_with_correct_templates_and_fields_including_honeypot(self):
         # Arrange
@@ -73,8 +78,8 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
             "email2",
             "You must type the same email each time."
         )
-        self.assertEqual(get_user_model().objects.count(), 0)
-        self.assertEqual(EmailAddress.objects.count(), 0)
+        self.assertEqual(get_user_model().objects.count(), 4)
+        self.assertEqual(EmailAddress.objects.count(), 4)
         self.assertEqual(len(mail.outbox), 0)
 
     def test_post_with_password_mismatch_does_not_create_account_or_send_email_but_reports_errors(self):
@@ -102,8 +107,8 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
             "password2",
             "You must type the same password each time."
         )
-        self.assertEqual(get_user_model().objects.count(), 0)
-        self.assertEqual(EmailAddress.objects.count(), 0)
+        self.assertEqual(get_user_model().objects.count(), 4)
+        self.assertEqual(EmailAddress.objects.count(), 4)
         self.assertEqual(len(mail.outbox), 0)
 
     def test_post_with_similar_password_does_not_create_account_or_send_email_but_reports_errors(self):
@@ -131,8 +136,8 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
             "password1",
             "The password is too similar to the username."
         )
-        self.assertEqual(get_user_model().objects.count(), 0)
-        self.assertEqual(EmailAddress.objects.count(), 0)
+        self.assertEqual(get_user_model().objects.count(), 4)
+        self.assertEqual(EmailAddress.objects.count(), 4)
         self.assertEqual(len(mail.outbox), 0)
 
     def test_post_with_short_password_does_not_create_account_or_send_email_but_reports_errors(self):
@@ -160,8 +165,8 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
             "password1",
             "This password is too short. It must contain at least 8 characters."
         )
-        self.assertEqual(get_user_model().objects.count(), 0)
-        self.assertEqual(EmailAddress.objects.count(), 0)
+        self.assertEqual(get_user_model().objects.count(), 4)
+        self.assertEqual(EmailAddress.objects.count(), 4)
         self.assertEqual(len(mail.outbox), 0)
 
     def test_post_with_common_password_does_not_create_account_or_send_email_but_reports_errors(self):
@@ -195,8 +200,8 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
             "password1",
             "This password is too common."
         )
-        self.assertEqual(get_user_model().objects.count(), 0)
-        self.assertEqual(EmailAddress.objects.count(), 0)
+        self.assertEqual(get_user_model().objects.count(), 4)
+        self.assertEqual(EmailAddress.objects.count(), 4)
         self.assertEqual(len(mail.outbox), 0)
 
     def test_post_with_numeric_password_does_not_create_account_or_send_email_but_reports_errors(self):
@@ -234,16 +239,16 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
                 "This password must contain at least 1 special character."
             ]
         )
-        self.assertEqual(get_user_model().objects.count(), 0)
-        self.assertEqual(EmailAddress.objects.count(), 0)
+        self.assertEqual(get_user_model().objects.count(), 4)
+        self.assertEqual(EmailAddress.objects.count(), 4)
         self.assertEqual(len(mail.outbox), 0)
 
     def test_post_with_valid_data_creates_account_and_sends_email(self):
         # Arrange
         data = {
-            "username": "testuser",
-            "email": "testuser@example.com",
-            "email2": "testuser@example.com",
+            "username": "testuser9",
+            "email": "testuser9@example.com",
+            "email2": "testuser9@example.com",
             "password1": "Yfr_A0Qdk7W-s2s01Mec ",
             "password2": "Yfr_A0Qdk7W-s2s01Mec ",
         }
@@ -253,15 +258,21 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
 
         # Assert
         self.assertRedirects(response, self.redirect_url)
-        #self.assertTemplateUsed(response, "master.html")
-        #self.assertTemplateUsed(response, "user-master.html")
-        #self.assertTemplateUsed(response, "account/verification_sent.html")
+        # self.assertTemplateUsed(response, "master.html")
+        # self.assertTemplateUsed(response, "user-master.html")
+        # self.assertTemplateUsed(response, "account/verification_sent.html")
         self.assertMessages(response, [Message(messages.INFO, f"Confirmation email sent to {data['email']}.")])
-        self.assertEqual(get_user_model().objects.count(), 1)
-        user = get_user_model().objects.get(username="testuser")
+        self.assertEqual(get_user_model().objects.count(), 5)
+        user = get_user_model().objects.get(username="testuser9")
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.groups.filter(name="users").exists(), "User was not added to the group \"users\".")
         email_record = EmailAddress.objects.filter(user=user).first()
         self.assertIsNotNone(email_record)
+        self.assertEqual(email_record.user, user)
         self.assertEqual(email_record.email, data["email"])
+        self.assertTrue(email_record.primary)
         self.assertFalse(email_record.verified)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, "[testserver] Please Confirm Your Email Address")
@@ -271,8 +282,13 @@ class TestUnauthenticatedSignupView(MessagesTestMixin, TestCase):
 class TestUnauthenticatedLoginView(MessagesTestMixin, TestCase):
     """
     This class tests our login view.
+
+    The fixture is needed so that we have our groups for testing purposes, but
+    it results in a base count of 4 users and email records before any test
+    creates a user.
     """
     login_url = reverse(settings.LOGIN_URL)
+    fixtures = ["core/tests/fixtures/users.json"]
 
     def test_get_receives_login_view(self):
         # Arrange
@@ -294,10 +310,12 @@ class TestUnauthenticatedLoginView(MessagesTestMixin, TestCase):
         client = self.client_class()
         username = "testuser1"
         password = "Test user1 "
-        email = "test@example.com"
-        user = get_user_model().objects.create(username=username, email=email)
+        user = get_user_model().objects.get(username=username)
         user.set_password(password)
         user.save()
+        email_record = EmailAddress.objects.filter(user=user).first()
+        email_record.verified = False;
+        email_record.save()
 
         data = {
             "login": user.username,
@@ -321,16 +339,9 @@ class TestUnauthenticatedLoginView(MessagesTestMixin, TestCase):
         client = self.client_class()
         username = "testuser1"
         password = "Test user1 "
-        email = "test@example.com"
-        user = get_user_model().objects.create(username=username, email=email)
+        user = get_user_model().objects.get(username=username)
         user.set_password(password)
         user.save()
-        EmailAddress.objects.create(
-            user=user,
-            email=user.email,
-            primary=True,
-            verified=True
-        )
 
         data = {
             "login": user.username,
