@@ -16,9 +16,9 @@ class UsersConfig(AppConfig):
 
         Returns: None
         """
-        from allauth.account.signals import user_signed_up
-        from users.signals import UserSignalHandlers
-        from .models import User
+        from allauth.account.signals import user_signed_up  # pylint: disable=import-outside-toplevel
+        from users.signals import UserSignalHandlers  # pylint: disable=import-outside-toplevel
+        from .models import User  # pylint: disable=import-outside-toplevel
 
         user_signed_up.connect(
             UserSignalHandlers.add_user_to_user_group,

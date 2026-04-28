@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 logger = logging.getLogger(__name__)
 
 
-class UserSignalHandlers:
+class UserSignalHandlers:  # pylint: disable=too-few-public-methods
     """
     The signal handlers for signals related to users.
     """
@@ -28,7 +28,7 @@ class UserSignalHandlers:
         try:
             group = Group.objects.get(name="users")
             user.groups.add(group)
-            logger.info(f"Added {user.username} to class users.")
+            logger.info("Added %s to users group.", user.username)
         except Group.DoesNotExist:
             # Handle cases where the group does not exist
-            logger.error(f"Unable to add {user.username} to class users: group does not exist.")
+            logger.error("Unable to add %s to class users: group does not exist.", user.username)
