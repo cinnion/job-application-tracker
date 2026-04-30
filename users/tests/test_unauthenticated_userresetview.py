@@ -239,6 +239,7 @@ class TestUnauthenticatedUserPasswordResetView(MessagesTestMixin, TestCase):
         timestamp, token = key.rsplit("-")
         badkey = "-".join([timestamp, token[::-1]])
         url = reverse("account_reset_password_from_key", kwargs={"uidb36": uidb36, "key": badkey})
+        reset_url = reverse("account_reset_password")
 
         # Act
         response = self.client.get(url)
@@ -250,7 +251,7 @@ class TestUnauthenticatedUserPasswordResetView(MessagesTestMixin, TestCase):
         self.assertTemplateUsed(response, f"account/password_reset_from_key.{app_settings.TEMPLATE_EXTENSION}")
         self.assertContains(response, "<h4>Bad Token</h4>", html=True)
         self.assertContains(response,
-                            "The password reset link was invalid, possibly because it has already been used.  Please request a <a href=\"{reset_url}\">new password reset</a>.",
+                            f"The password reset link was invalid, possibly because it has already been used.  Please request a <a href=\"{reset_url}\">new password reset</a>.",
                             html=True)
         self.assertIsNone(self.client.session.get(INTERNAL_RESET_SESSION_KEY, None))
 
