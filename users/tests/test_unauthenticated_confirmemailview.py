@@ -197,7 +197,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
         self.assertTemplateUsed(response, "master.html")
         self.assertTemplateUsed(response, "user-master.html")
         self.assertTemplateUsed(response, f"account/login.{app_settings.TEMPLATE_EXTENSION}")
-        self.assertMessages(response, [Message(messages.INFO, "You have confirmed testuser@example.com.")])
+        self.assertMessages(response, [Message(messages.SUCCESS, "You have confirmed testuser@example.com.")])
 
     def test_put_request_gets_an_error(self):
         # Arrange
