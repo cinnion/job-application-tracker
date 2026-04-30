@@ -156,6 +156,7 @@ per-file-ignores = [
     "core/tests/mixins.py:line-too-long,too-many-arguments,too-many-positional-arguments",
     "job_application_tracker/middleware.py:too-few-public-methods",
     "job_application_tracker/settings.py:line-too-long,consider-using-f-string,invalid-name",
+    "users/tests/test_unauthenticated_userresetview.py:line-too-long",
     "users/views.py:duplicate-code"
 ]
 

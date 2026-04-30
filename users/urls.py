@@ -5,7 +5,7 @@ change/reset, profile editing, etc.
 from typing import List, Union
 
 from allauth.account import views as AllauthViews
-from django.urls import path, URLResolver, URLPattern
+from django.urls import path, URLResolver, URLPattern, re_path
 
 from . import views
 
@@ -20,7 +20,7 @@ urlpatterns: List[Union[URLResolver, URLPattern]] = [
     path("password/change/", views.PasswordChangeView.as_view(), name="account_change_password"),
     path("password/reset/", AllauthViews.PasswordResetView.as_view(), name="account_reset_password"),
     path("password/reset/done/", AllauthViews.PasswordResetDoneView.as_view(), name="account_reset_password_done"),
-    path("password/reset/key/<uidb36>-<key>/", AllauthViews.PasswordResetFromKeyView.as_view(),
+    re_path(r"^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$", views.PasswordResetFromKeyView.as_view(),
          name="account_reset_password_from_key"),
     path("password/reset/key/done/", AllauthViews.PasswordResetFromKeyDoneView.as_view(),
          name="account_reset_password_from_key_done"),
