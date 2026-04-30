@@ -30,7 +30,7 @@ ENV PYTHONUNBUFFERED 1
 # Install psycopg dependencies we will need to build the wheels and run tests
 #
 RUN apk update \
-    && apk add postgresql-dev gcc python3-dev
+    && apk add postgresql-dev gcc python3-dev git
 
 #
 # Copy the application code to /usr/src/app and upgrade PIP
@@ -76,11 +76,6 @@ FROM builder AS tester
 WORKDIR /usr/src/app
 
 #
-# Install git, so we can get the list of files.
-#
-RUN apk add git
-
-#
 # Install development requirements
 #
 RUN pip install '.[dev]'
@@ -88,7 +83,7 @@ RUN pip install '.[dev]'
 #
 # Run pylint
 #
-RUN pylint --disable=fixme $(git ls-files '*.py')
+RUN pylint --disable=fixme .
 
 ##############
 # Production #
