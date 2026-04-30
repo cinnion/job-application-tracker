@@ -66,7 +66,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
     """
     fixtures = ["core/tests/fixtures/users.json"]
 
-    def getSignatureKey(self, timestamp: int | None = None) -> str:
+    def get_signature_key(self, timestamp: int | None = None) -> str:
         """
         Generate a signature key like those used to verify a user's email address.
 
@@ -79,7 +79,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
             self.email_address.pk, serializer=JSONSerializer, compress=False
         )
 
-    def getConfirmationLink(self, timestamp: int | None = None) -> str:
+    def get_confirmation_link(self, timestamp: int | None = None) -> str:
         """
         Get the confirmation link which would be sent in an email.
 
@@ -88,7 +88,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
         Returns: The URL to use.
         """
-        key = self.getSignatureKey(timestamp=timestamp)
+        key = self.get_signature_key(timestamp=timestamp)
         return reverse("account_confirm_email", kwargs={"key": key})
 
     def setUp(self):
@@ -135,7 +135,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
     def test_get_with_expired_token_results_in_unenumerated_error_response(self):
         # Arrange
         timestamp = int(time.time()) - 60 * 60 * 24 * 30
-        url = self.getConfirmationLink(timestamp=timestamp)
+        url = self.get_confirmation_link(timestamp=timestamp)
         response_url = reverse("account_email")
 
         # Act
@@ -152,7 +152,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_get_with_current_token_results_in_response_with_confirm_form(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -173,7 +173,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
     def test_post_with_expired_token_results_in_redirect_to_404_error(self):
         # Arrange
         timestamp = int(time.time()) - 60 * 60 * 24 * 30
-        key = self.getSignatureKey(timestamp=timestamp)
+        key = self.get_signature_key(timestamp=timestamp)
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -186,7 +186,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_post_with_current_token_results_in_redirect_to_login(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -201,7 +201,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_put_request_gets_an_error(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -212,7 +212,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_patch_request_gets_an_error(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -223,7 +223,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_delete_request_gets_an_error(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -234,7 +234,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_head_request_gets_a_200_response(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act
@@ -246,7 +246,7 @@ class TestUnauthenticatedConfirmEmailView(MessagesTestMixin, TestCase):
 
     def test_options_request_gets_an_error(self):
         # Arrange
-        key = self.getSignatureKey()
+        key = self.get_signature_key()
         url = reverse("account_confirm_email", kwargs={"key": key})
 
         # Act

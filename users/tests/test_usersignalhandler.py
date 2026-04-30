@@ -1,3 +1,6 @@
+"""
+Tests for our user related signal handler.
+"""
 import unittest
 
 from allauth.account.signals import user_signed_up
@@ -9,6 +12,10 @@ from core.test import TestCase
 
 
 class TestUserSignalHandler(TestCase):
+    """
+    Tests for our user related signal handler.
+    """
+
     def test_user_created_but_group_does_not_exist(self):
         # Arrange
         data = {
@@ -23,7 +30,8 @@ class TestUserSignalHandler(TestCase):
         # Act/Assert
         with self.assertLogs('users.signals', level='INFO') as cm:
             user_signed_up.send(sender=user.__class__, request=request, user=user, **signal_kwargs)
-            self.assertIn("ERROR:users.signals:Unable to add testuser to class users: group does not exist.", cm.output[0])
+            self.assertIn("ERROR:users.signals:Unable to add testuser to class users: group does not exist.",
+                          cm.output[0])
 
     def test_user_created_and_group_exists_added_to_group(self):
         # Arrange
