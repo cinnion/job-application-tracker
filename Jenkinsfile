@@ -228,7 +228,7 @@ pipeline {
 
     }
     post {
-        cleanup {
+        success {
             sh "docker system prune -f"
             sh "docker container prune -f"
             sh "docker image prune -a -f"

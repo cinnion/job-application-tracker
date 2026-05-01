@@ -50,7 +50,7 @@ FROM builder AS builder2
 #
 # Create wheels for installation on the production image
 #
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -e .
+RUN pip wheel --no-cache-dir --wheel-dir /usr/src/app/wheels .
 
 #
 # Install nodejs/npm, then install our node packages
@@ -140,7 +140,7 @@ RUN apk update && apk add libpq
 COPY --from=builder2 /usr/src/app/wheels /wheels
 COPY --from=builder2 /usr/src/app/static static
 RUN pip install --upgrade pip \
-    && pip install --no-cache /wheels/*
+    && pip install --no-cache --no-index --find-links=/wheels --only-binary=:all: --no-deps /wheels/*
 
 #
 # Copy in the entrypoint script
