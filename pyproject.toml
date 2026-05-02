@@ -102,6 +102,7 @@ omit = [
     "job_application_tracker/wsgi.py",
 
     # Test files themselves
+    "core/test.py",
     "*/tests/*",
     "tests.py",
 ]
