@@ -541,6 +541,38 @@ class TestUnauthenticatedUserPasswordResetView(MessagesTestMixin, TestCase):
         self.assertEqual(changed_fields, ["password"])
         self.assertTrue(user.check_password(data["password1"]))
 
+    def test_user_without_perm_get_password_reset_key_form_valid_password_does_not_change_and_raises_permission_denied(
+            self):
+        # Arrange
+        data = {
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
+        }
+        user, _, key, url = self.setup_uidb36_and_key_with_set_url("testuser4")
+        orig_dict = self.get_user_fields(user)
+        session = self.client.session
+        session[INTERNAL_RESET_SESSION_KEY] = key
+        session.save()
+
+        # Act
+        with self.assertLogs('users.views', level='INFO') as cm:
+            response = self.client.get(url, data, follow=True)
+            self.assertIn("ERROR:users.views:Someone at [192.168.8.194, 10.0.0.2]"
+                          f" attempted to do a GET to reset the password for \"testuser4\" (uid={user.pk})",
+                          cm.output[0])
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, "403.html")
+        user.refresh_from_db()
+        post_dict = self.get_user_fields(user)
+        changed_fields = [k
+                          for k in orig_dict.keys() & post_dict.keys()
+                          if orig_dict[k] != post_dict[k]
+                          ]
+        self.assertEqual(changed_fields, [])
+        self.assertFalse(user.check_password(data["password1"]))
+
     def test_user_without_perm_post_password_reset_key_form_valid_password_does_not_change_and_raises_permission_denied(
             self):
         # Arrange
@@ -557,7 +589,41 @@ class TestUnauthenticatedUserPasswordResetView(MessagesTestMixin, TestCase):
         # Act
         with self.assertLogs('users.views', level='INFO') as cm:
             response = self.client.post(url, data, follow=True)
-            self.assertIn("ERROR:users.views:Someone at ", cm.output[0])
+            self.assertIn("ERROR:users.views:Someone at [192.168.8.194, 10.0.0.2]"
+                          f" attempted to do a POST to reset the password for \"testuser4\" (uid={user.pk})",
+                          cm.output[0])
+
+        # Assert
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, "403.html")
+        user.refresh_from_db()
+        post_dict = self.get_user_fields(user)
+        changed_fields = [k
+                          for k in orig_dict.keys() & post_dict.keys()
+                          if orig_dict[k] != post_dict[k]
+                          ]
+        self.assertEqual(changed_fields, [])
+        self.assertFalse(user.check_password(data["password1"]))
+
+    def test_user_without_perm_put_password_reset_key_form_valid_password_does_not_change_and_raises_permission_denied(
+            self):
+        # Arrange
+        data = {
+            "password1": "Yfr_A0Qdk7W-s2s01Mec ",
+            "password2": "Yfr_A0Qdk7W-s2s01Mec ",
+        }
+        user, _, key, url = self.setup_uidb36_and_key_with_set_url("testuser4")
+        orig_dict = self.get_user_fields(user)
+        session = self.client.session
+        session[INTERNAL_RESET_SESSION_KEY] = key
+        session.save()
+
+        # Act
+        with self.assertLogs('users.views', level='INFO') as cm:
+            response = self.client.put(url, data, follow=True)
+            self.assertIn("ERROR:users.views:Someone at [192.168.8.194, 10.0.0.2]"
+                          f" attempted to do a PUT to reset the password for \"testuser4\" (uid={user.pk})",
+                          cm.output[0])
 
         # Assert
         self.assertEqual(response.status_code, 403)
