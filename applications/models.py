@@ -59,6 +59,7 @@ class JobApplication(models.Model):
     )
     posting = models.URLField(
         _("job posting url"),
+        max_length=2048,
         blank=True,
         null=True,
         help_text=_(
