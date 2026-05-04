@@ -40,7 +40,7 @@ pipeline {
                 sh "set"
                 sh "env"
                 sh "git status"
-                sh "git checkout -b ${GIT_BRANCH} remotes/${GIT_BRANCH} || git checkout ${GIT_BRANCH}"
+                sh '''git checkout -b ${GIT_BRANCH} remotes/${GIT_BRANCH} || git checkout ${GIT_BRANCH#*/}'''
                 sh "git status"
             }
         }
