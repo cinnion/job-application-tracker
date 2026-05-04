@@ -37,7 +37,11 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Explicitly check out the branch that triggered the build, so that when branch conditions work.
-                sh "git checkout -b ${GIT_BRANCH} remotes/origin/${GIT_BRANCH} || git checkout ${GIT_BRANCH}"
+                sh "set"
+                sh "env"
+                sh "git status"
+                sh "git checkout -b ${GIT_BRANCH} remotes/${GIT_BRANCH} || git checkout ${GIT_BRANCH}"
+                sh "git status"
             }
         }
         stage('Get Tag Name') {
