@@ -37,7 +37,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Explicitly check out the branch that triggered the build, so that when branch conditions work.
-                sh "git checkout -b ${GIT_BRANCH} remotes/origin/${GIT_BRANCH} || git checkout ${GIT_BRANCH}"
+                sh '''git status && git branch -D ${GIT_BRANCH#*/} || true'''
+                sh '''git checkout ${GIT_BRANCH#*/}'''
+                sh "git status"
             }
         }
         stage('Get Tag Name') {
@@ -214,7 +216,7 @@ pipeline {
 
         stage('Deploy to production (beta)') {
             when {
-                branch 'main'
+                branch '*/main'
             }
             steps {
                 sshagent(credentials: ['jenkins-ssh']) {
