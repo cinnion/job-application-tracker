@@ -37,6 +37,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Explicitly check out the branch that triggered the build, so that when branch conditions work.
+                echo "Branch: ${GIT_BRANCH}"
                 sh '''git status && git branch -D ${GIT_BRANCH#*/} || true'''
                 sh '''git checkout ${GIT_BRANCH#*/}'''
                 sh "git status"
@@ -202,7 +203,7 @@ pipeline {
 
         stage('Deploy to internal') {
             when {
-                not { branch 'main' }
+                not { branch 'origin/main' }
             }
             steps {
                 sshagent(credentials: ['jenkins-ssh']) {
@@ -216,7 +217,7 @@ pipeline {
 
         stage('Deploy to production (beta)') {
             when {
-                branch '*/main'
+                branch 'origin/main'
             }
             steps {
                 sshagent(credentials: ['jenkins-ssh']) {
