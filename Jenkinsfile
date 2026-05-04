@@ -37,8 +37,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Explicitly check out the branch that triggered the build, so that when branch conditions work.
-                sh "env"
                 sh "set"
+                sh "env"
                 sh "git status"
                 sh "git checkout -b ${GIT_BRANCH} remotes/${GIT_BRANCH} || git checkout ${GIT_BRANCH}"
                 sh "git status"
